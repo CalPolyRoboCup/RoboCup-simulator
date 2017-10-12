@@ -6,6 +6,9 @@
 
 #define TEAM_SIZE 6
 
+/**
+ * @brief The Master class is an abstract class that handles receiving packets from the SSL server and updating robot information
+ */
 class Master
 {
 private:
@@ -19,7 +22,12 @@ protected:
     Robot* m_blueBots[TEAM_SIZE];
 
 public:
-    Master();
+    /**
+     * @brief Initializes a new instance of the Master class
+     * @param port The vision mulicast port
+     * @param netAddress The vision multicast address
+     */
+    Master(qint16 port, const std::string netAddress);
 
     void run();
 };
