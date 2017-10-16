@@ -3,6 +3,7 @@
 
 #include "Master.h"
 #include <QUdpSocket>
+#include <vector>
 
 /**
  * @brief The ClientMaster class derives from @see Master and implement communication to the grSim client
@@ -14,6 +15,12 @@ private:
     Robot** m_teamBots;
 
     QUdpSocket* m_pUdpSocket;
+
+    std::vector<int> m_directions;
+
+    void updateDirections(int key, bool pressed);
+
+    int getKeyIndex(int key);
 
 public:
     /**

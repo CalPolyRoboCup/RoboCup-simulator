@@ -15,7 +15,7 @@ Master::Master(qint16 port, const std::string netAddress, QWidget* parent) : QWi
     }
 
     m_pFieldPixmap = new QPixmap();
-    std::cout << m_pFieldPixmap->load(":/images/Field.png") << std::endl;
+    m_pFieldPixmap->load(":/images/Field.png");
 
     // Open the SSL client
     m_pClient = new RoboCupSSLClient(port, netAddress, "");

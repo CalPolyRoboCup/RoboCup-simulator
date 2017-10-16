@@ -3,6 +3,7 @@
 #include <QString>
 #include <QKeyEvent>
 #include <qmath.h>
+#include <cmath>
 
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
     Master(port, netAddress, parent),
@@ -34,34 +35,59 @@ void ClientMaster::update(double deltaTime)
 
 void ClientMaster::keyPressEvent(QKeyEvent* e)
 {
-    float targetDirection;
-
-    switch (e->key())
-    {
-    case Qt::Key_Right:
-        targetDirection = 0.0f;
-        break;
-    case Qt::Key_Up:
-        targetDirection = M_PI * 1.5f;
-        break;
-    case Qt::Key_Left:
-        targetDirection = M_PI;
-        break;
-    case Qt::Key_Down:
-        targetDirection = M_PI * 0.5f;
-        break;
-    default:
-        return;
-    }
-
-    Robot* r = m_teamBots[0];
-
-    r->setTargetDirection(targetDirection);
-    r->setTargetSpeed(3.0f);
+    updateDirections(e->key(), true);
 }
 
 void ClientMaster::keyReleaseEvent(QKeyEvent* e)
 {
+    updateDirections(e->key(), false);
+}
+
+void ClientMaster::updateDirections(int key, bool pressed)
+{
+    if (pressed)
+    {
+        if (getKeyIndex(key) == -1)
+            return;
+        else
+            m_directions.push_back(key);
+    }
+    else
+    {
+        if (std::find(m_directions.begin(), m_directions.end(), key) != m_directions.end())
+            m_directions.erase(std::remove(m_directions.begin(), m_directions.end(), key), m_directions.end());
+        else
+            return;
+    }
+
     Robot* r = m_teamBots[0];
-    r->setTargetSpeed(0.0f);
+
+    if (m_directions.empty())
+    {
+        r->setTargetSpeed(0.0f);
+    }
+    else
+    {
+        float targetDirection = getKeyIndex(m_directions.back()) * M_PI * 0.5;
+
+        r->setTargetDirection(targetDirection);
+        r->setTargetSpeed(3.0f);
+    }
+}
+
+int ClientMaster::getKeyIndex(int key)
+{
+    switch (key)
+    {
+    case Qt::Key_Right:
+        return 0;
+    case Qt::Key_Down:
+        return 1;
+    case Qt::Key_Left:
+        return 2;
+    case Qt::Key_Up:
+        return 3;
+    default:
+        return -1;
+    }
 }
