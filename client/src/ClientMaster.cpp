@@ -1,10 +1,11 @@
 #include "ClientMaster.h"
 #include <iostream>
 #include <QString>
+#include <QKeyEvent>
 #include <qmath.h>
 
-ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team) :
-    Master(port, netAddress),
+ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
+    Master(port, netAddress, parent),
     m_team(team)
 {
     m_teamBots = m_team == YELLOW ? m_yellowBots : m_blueBots;
@@ -21,15 +22,6 @@ void ClientMaster::update(double deltaTime)
     // Update each robot on the controlling team
     for (int i = 0; i < TEAM_SIZE; i++)
     {   
-        // Testing vvv
-        if (m_teamBots[i]->getId() == 0)
-        {
-            m_teamBots[i]->setTargetDirection(M_PI);
-            m_teamBots[i]->setTargetAngularVelocity(1.0f);
-            m_teamBots[i]->setTargetSpeed(1.0f);
-        }
-        // Testing ^^^
-
         m_teamBots[i]->update(simPacket.mutable_commands()->add_robot_commands(), deltaTime);
     }
 
@@ -38,4 +30,38 @@ void ClientMaster::update(double deltaTime)
     dgram.resize(simPacket.ByteSize());
     simPacket.SerializeToArray(dgram.data(), dgram.size());
     m_pUdpSocket->writeDatagram(dgram, QHostAddress("127.0.0.1"), 20011);
+}
+
+void ClientMaster::keyPressEvent(QKeyEvent* e)
+{
+    float targetDirection;
+
+    switch (e->key())
+    {
+    case Qt::Key_Right:
+        targetDirection = 0.0f;
+        break;
+    case Qt::Key_Up:
+        targetDirection = M_PI * 1.5f;
+        break;
+    case Qt::Key_Left:
+        targetDirection = M_PI;
+        break;
+    case Qt::Key_Down:
+        targetDirection = M_PI * 0.5f;
+        break;
+    default:
+        return;
+    }
+
+    Robot* r = m_teamBots[0];
+
+    r->setTargetDirection(targetDirection);
+    r->setTargetSpeed(3.0f);
+}
+
+void ClientMaster::keyReleaseEvent(QKeyEvent* e)
+{
+    Robot* r = m_teamBots[0];
+    r->setTargetSpeed(0.0f);
 }
