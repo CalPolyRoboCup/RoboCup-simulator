@@ -22,9 +22,9 @@ void ClientMaster::update(double deltaTime)
 
     // Update each robot on the controlling team
     for (int i = 0; i < TEAM_SIZE; i++)
-    {   
         m_teamBots[i]->update(simPacket.mutable_commands()->add_robot_commands(), deltaTime);
-    }
+
+    m_ball->update(deltaTime);
 
     // Serialize the packet and send it to grSim
     QByteArray dgram;

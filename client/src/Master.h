@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QPixmap>
 #include "Robot.h"
+#include "Ball.h"
 #include "robocup_ssl_client.h"
 
 #define TEAM_SIZE 6
@@ -28,6 +29,8 @@ protected:
     Robot* m_yellowBots[TEAM_SIZE];
     Robot* m_blueBots[TEAM_SIZE];
 
+    Ball* m_ball;
+
 private:
     const int m_WIDTH = 1040;
     const int m_HEIGHT = 740;
@@ -41,6 +44,8 @@ private:
     double m_lastUpdateTime;
 
     void paintEvent(QPaintEvent* e);
+
+    QPoint convertToScreenPoint(QVector2D point);
 
     virtual void update(double deltaTime) = 0;
 

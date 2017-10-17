@@ -17,6 +17,8 @@ Master::Master(qint16 port, const std::string netAddress, QWidget* parent) : QWi
         m_blueBots[i] = new Robot(BLUE, i);
     }
 
+    m_ball = new Ball;
+
     m_pFieldPixmap = new QPixmap();
     m_pYellowBot = new QPixmap();
     m_pBlueBot = new QPixmap();
@@ -71,6 +73,12 @@ void Master::run()
             SSL_DetectionRobot robot = frame.robots_blue(i);
             m_blueBots[robot.robot_id()]->refresh(robot);
         }
+
+        if (frame.balls_size() > 0)
+        {
+            SSL_DetectionBall ball = frame.balls(0);
+            m_ball->refresh(ball);
+        }
     }
 }
 
@@ -78,15 +86,18 @@ void Master::paintEvent(QPaintEvent* e)
 {
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform, true);
-    painter.setPen(Qt::black);
 
     painter.drawPixmap(0, 0, m_WIDTH, m_HEIGHT, *m_pFieldPixmap);
 
+    painter.setPen(Qt::black);
+    painter.setBrush(Qt::red);
+
+    QPoint ballPosition = convertToScreenPoint(m_ball->getPosition());
+    painter.drawEllipse(ballPosition, 2, 2);
+
     for (int i = 0; i < TEAM_SIZE; i++)
     {
-        QPoint robotPoint = m_yellowBots[i]->getPosition().toPoint() * 0.1;
-        robotPoint.setY(robotPoint.y() * -1);
-        robotPoint += QPoint(m_WIDTH / 2, m_HEIGHT / 2);
+        QPoint robotPoint = convertToScreenPoint(m_yellowBots[i]->getPosition());
 
         painter.translate(robotPoint.x(), robotPoint.y());
         painter.rotate(-m_yellowBots[i]->getOrientation() * (180.0 / M_PI));
@@ -95,9 +106,7 @@ void Master::paintEvent(QPaintEvent* e)
 
         painter.resetTransform();
 
-        robotPoint = m_blueBots[i]->getPosition().toPoint() * 0.1;
-        robotPoint.setY(robotPoint.y() * -1);
-        robotPoint += QPoint(m_WIDTH / 2, m_HEIGHT / 2);
+        robotPoint = convertToScreenPoint(m_blueBots[i]->getPosition());
 
         painter.translate(robotPoint.x(), robotPoint.y());
         painter.rotate(-m_blueBots[i]->getOrientation() * (180.0 / M_PI));
@@ -106,4 +115,22 @@ void Master::paintEvent(QPaintEvent* e)
 
         painter.resetTransform();
     }
+
+    for (int i = 0; i < TEAM_SIZE; i++)
+    {
+        QPoint robotPoint = convertToScreenPoint(m_yellowBots[i]->getPosition());
+        painter.drawText(robotPoint.x() + 9, robotPoint.y() - 9, QString::number(i));
+
+        robotPoint = convertToScreenPoint(m_blueBots[i]->getPosition());
+        painter.drawText(robotPoint.x() + 9, robotPoint.y() - 9, QString::number(i));
+    }
+}
+
+QPoint Master::convertToScreenPoint(QVector2D pos)
+{
+    QPoint point = pos.toPoint() * 0.1;
+    point.setY(point.y() * -1);
+    point += QPoint(m_WIDTH / 2, m_HEIGHT / 2);
+
+    return point;
 }

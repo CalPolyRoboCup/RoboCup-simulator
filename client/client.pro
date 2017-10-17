@@ -10,7 +10,8 @@ SOURCES += \
     src/messages_robocup_ssl_refbox_log.pb.cc \
     src/messages_robocup_ssl_wrapper.pb.cc \
     src/ClientMaster.cpp \
-    src/Master.cpp
+    src/Master.cpp \
+    src/Ball.cpp
 
 HEADERS += \
     src/robocup_ssl_client.h \
@@ -23,7 +24,8 @@ HEADERS += \
     src/messages_robocup_ssl_refbox_log.pb.h \
     src/messages_robocup_ssl_wrapper.pb.h \
     src/ClientMaster.h \
-    src/Master.h
+    src/Master.h \
+    src/Ball.h
 
 QT += network
 
