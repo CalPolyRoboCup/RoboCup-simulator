@@ -33,6 +33,8 @@ private:
     const int m_HEIGHT = 740;
 
     QPixmap* m_pFieldPixmap;
+    QPixmap* m_pYellowBot;
+    QPixmap* m_pBlueBot;
 
     RoboCupSSLClient* m_pClient;
     QTimer* m_pTimer;

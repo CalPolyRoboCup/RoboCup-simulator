@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/images">
         <file>Field.png</file>
+        <file>BlueBot.png</file>
+        <file>YellowBot.png</file>
     </qresource>
 </RCC>

@@ -49,15 +49,15 @@ void ClientMaster::updateDirections(int key, bool pressed)
     {
         if (getKeyIndex(key) == -1)
             return;
-        else
-            m_directions.push_back(key);
+
+        m_directions.push_back(key);
     }
     else
     {
-        if (std::find(m_directions.begin(), m_directions.end(), key) != m_directions.end())
-            m_directions.erase(std::remove(m_directions.begin(), m_directions.end(), key), m_directions.end());
-        else
+        if (std::find(m_directions.begin(), m_directions.end(), key) == m_directions.end())
             return;
+
+        m_directions.erase(std::remove(m_directions.begin(), m_directions.end(), key), m_directions.end());
     }
 
     Robot* r = m_teamBots[0];

@@ -1,6 +1,9 @@
 #include "Master.h"
 #include <iostream>
 #include <QPainter>
+#include <QMatrix>
+#include <QImage>
+#include <qmath.h>
 
 Master::Master(qint16 port, const std::string netAddress, QWidget* parent) : QWidget(parent)
 {
@@ -15,7 +18,12 @@ Master::Master(qint16 port, const std::string netAddress, QWidget* parent) : QWi
     }
 
     m_pFieldPixmap = new QPixmap();
+    m_pYellowBot = new QPixmap();
+    m_pBlueBot = new QPixmap();
+
     m_pFieldPixmap->load(":/images/Field.png");
+    m_pYellowBot->load(":/images/YellowBot.png");
+    m_pBlueBot->load(":/images/BlueBot.png");
 
     // Open the SSL client
     m_pClient = new RoboCupSSLClient(port, netAddress, "");
@@ -69,23 +77,33 @@ void Master::run()
 void Master::paintEvent(QPaintEvent* e)
 {
     QPainter painter(this);
+    painter.setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform, true);
     painter.setPen(Qt::black);
 
     painter.drawPixmap(0, 0, m_WIDTH, m_HEIGHT, *m_pFieldPixmap);
 
     for (int i = 0; i < TEAM_SIZE; i++)
     {
-        painter.setBrush(Qt::yellow);
-
         QPoint robotPoint = m_yellowBots[i]->getPosition().toPoint() * 0.1;
         robotPoint.setY(robotPoint.y() * -1);
-        painter.drawEllipse(robotPoint + QPoint(m_WIDTH / 2, m_HEIGHT / 2), 9, 9);
+        robotPoint += QPoint(m_WIDTH / 2, m_HEIGHT / 2);
 
-        painter.setBrush(Qt::blue);
+        painter.translate(robotPoint.x(), robotPoint.y());
+        painter.rotate(-m_yellowBots[i]->getOrientation() * (180.0 / M_PI));
+
+        painter.drawPixmap(-9, -9, 18, 18, *m_pYellowBot);
+
+        painter.resetTransform();
 
         robotPoint = m_blueBots[i]->getPosition().toPoint() * 0.1;
         robotPoint.setY(robotPoint.y() * -1);
+        robotPoint += QPoint(m_WIDTH / 2, m_HEIGHT / 2);
 
-        painter.drawEllipse(robotPoint + QPoint(m_WIDTH / 2, m_HEIGHT / 2), 9, 9);
+        painter.translate(robotPoint.x(), robotPoint.y());
+        painter.rotate(-m_blueBots[i]->getOrientation() * (180.0 / M_PI));
+
+        painter.drawPixmap(-9, -9, 18, 18, *m_pBlueBot);
+
+        painter.resetTransform();
     }
 }
