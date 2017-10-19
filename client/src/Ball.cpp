@@ -22,7 +22,7 @@ void Ball::refresh(SSL_DetectionBall& ball)
     }
 }
 
-void Ball::update(double deltaTime)
+void Ball::updateStats(double deltaTime)
 {
     // Update the speed of the ball
     if (m_position != m_lastPosition)

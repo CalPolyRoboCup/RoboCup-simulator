@@ -5,7 +5,11 @@
 #include <QImage>
 #include <qmath.h>
 
-Master::Master(qint16 port, const std::string netAddress, QWidget* parent) : QWidget(parent)
+Master::Master(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
+    QWidget(parent),
+    m_WIDTH(1040),
+    m_HEIGHT(740),
+    m_team(team)
 {
     setWindowTitle("Cal Poly RoboCup SSL Engine");
     setFixedSize(m_WIDTH, m_HEIGHT);
@@ -15,6 +19,17 @@ Master::Master(qint16 port, const std::string netAddress, QWidget* parent) : QWi
     {
         m_yellowBots[i] = new Robot(YELLOW, i);
         m_blueBots[i] = new Robot(BLUE, i);
+    }
+
+    if (m_team == YELLOW)
+    {
+        m_teamBots = m_yellowBots;
+        m_opponentBots = m_blueBots;
+    }
+    else
+    {
+        m_teamBots= m_blueBots;
+        m_opponentBots = m_yellowBots;
     }
 
     m_ball = new Ball;
@@ -53,7 +68,6 @@ void Master::run()
         {
             m_lastUpdateTime = updateTime;
             update(deltaTime);
-            repaint();
         }
 
         // Update each yellow robot
@@ -80,6 +94,21 @@ void Master::run()
             m_ball->refresh(ball);
         }
     }
+}
+
+void Master::update(double deltaTime)
+{
+    // Update each robot on the controlling team
+    for (int i = 0; i < TEAM_SIZE; i++)
+        m_teamBots[i]->updateStats(deltaTime);
+
+    m_ball->updateStats(deltaTime);
+
+    for (int i = 0; i < TEAM_SIZE; i++)
+        m_teamBots[i]->updateCommand(deltaTime);
+
+    writeOutput();
+    repaint();
 }
 
 void Master::paintEvent(QPaintEvent* e)

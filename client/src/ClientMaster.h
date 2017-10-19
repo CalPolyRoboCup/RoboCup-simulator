@@ -10,18 +10,6 @@
  */
 class ClientMaster : public Master
 {
-private:
-    Team m_team;
-    Robot** m_teamBots;
-
-    QUdpSocket* m_pUdpSocket;
-
-    std::vector<int> m_directions;
-
-    void updateDirections(int key, bool pressed);
-
-    int getKeyIndex(int key);
-
 public:
     /**
      * @brief Initializes a new ClientMaster instance
@@ -30,12 +18,6 @@ public:
      * @param team The team the @see ClientMaster is controlling
      */
     ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent = 0);
-
-    /**
-     * @brief update Updates each child robot and sends command packets to grSim
-     * @param deltaTime the time passed since the last update
-     */
-    virtual void update(double deltaTime);
 
     /**
      * @brief keyPressEvent For testing - moves the yellow robot of index 0 according to which arrow key is pressed
@@ -48,6 +30,23 @@ public:
      * @param e The @see QKeyEvent indicating which key was released
      */
     void keyReleaseEvent(QKeyEvent* e);
+
+protected:
+
+    /**
+     * @brief update Updates each child robot and sends command packets to grSim
+     * @param deltaTime the time passed since the last update
+     */
+    virtual void writeOutput();
+
+private:
+    QUdpSocket* m_pUdpSocket;
+
+    std::vector<int> m_directions;
+
+    void updateDirections(int key, bool pressed);
+
+    int getKeyIndex(int key);
 };
 
 

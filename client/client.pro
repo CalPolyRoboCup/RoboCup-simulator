@@ -11,7 +11,9 @@ SOURCES += \
     src/messages_robocup_ssl_wrapper.pb.cc \
     src/ClientMaster.cpp \
     src/Master.cpp \
-    src/Ball.cpp
+    src/Ball.cpp \
+    src/Command.cpp \
+    src/TestCommand.cpp
 
 HEADERS += \
     src/robocup_ssl_client.h \
@@ -25,7 +27,10 @@ HEADERS += \
     src/messages_robocup_ssl_wrapper.pb.h \
     src/ClientMaster.h \
     src/Master.h \
-    src/Ball.h
+    src/Ball.h \
+    src/Command.h \
+    src/Team.h \
+    src/TestCommand.h
 
 QT += network
 

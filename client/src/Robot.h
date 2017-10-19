@@ -2,47 +2,18 @@
 #define ROBOT_H
 
 #include <QVector2D>
+#include "Command.h"
+#include "Team.h"
 #include "messages_robocup_ssl_wrapper.pb.h"
 #include "grSim_Packet.pb.h"
 
-/**
- * @brief The Team enum is used for describing which team a robot is on
- */
-enum Team
-{
-    YELLOW,
-    BLUE
-};
+class Command;
 
 /**
  * @brief The Robot class is used for accessing robot information and controlling a robot's outputs
  */
 class Robot
 {
-private:
-    bool m_initialized;
-
-    // Transform information
-    QVector2D m_position;
-    float m_orientation;
-
-    // Transform information from the last frame for calculating velocity
-    QVector2D m_lastPosition;
-    float m_lastOrientation;
-
-    // Velocity information
-    float m_speed;
-    float m_direction;
-    float m_angularVelocity;
-
-    // Target velocity information
-    float m_targetSpeed;
-    float m_targetDirection;
-    float m_targetAngularVelocity;
-
-    // Metadata
-    Team m_team;
-    unsigned char m_id;
 public:
     /**
      * @brief Initailizes a new Robot instance
@@ -112,7 +83,19 @@ public:
      * @param pCommand The command to which the function will write the outputs
      * @param deltaTime The time passed since the last update call
      */
-    void update(grSim_Robot_Command* pCommand, double deltaTime);
+    void updateStats(double deltaTime);
+
+    /**
+     * @brief Performs an update call for the Robot's current Command
+     * @param deltaTime The time passed since the last update call
+     */
+    void updateCommand(double deltaTime);
+
+    /**
+     * @brief Generates the @see grSim_Robot_Command information to be sent to GrSim
+     * @param pCommand The command to be populated
+     */
+    void writeOutput(grSim_Robot_Command* pCommand);
 
     // Velocity setters
 
@@ -133,6 +116,49 @@ public:
      * @param velocity The target velocity in rad/s
      */
     void setTargetAngularVelocity(float velocity);
+
+    /**
+     * @brief Sets the command to be executed before one is assigned or after a command ends
+     * @param pCommand The default command
+     */
+    void setDefaultCommand(Command* pCommand);
+
+    /**
+     * @brief Runs the given command
+     * @note Robot does NOT assume ownership of the command passed; eventual deallocation is the responsibility of the caller
+     * @param pCommand The @see Command to run
+     */
+    void runCommmand(Command* pCommand);
+
+private:
+    bool m_initialized;
+
+    // Transform information
+    QVector2D m_position;
+    float m_orientation;
+
+    // Transform information from the last frame for calculating velocity
+    QVector2D m_lastPosition;
+    float m_lastOrientation;
+
+    // Velocity information
+    float m_speed;
+    float m_direction;
+    float m_angularVelocity;
+
+    // Target velocity information
+    float m_targetSpeed;
+    float m_targetDirection;
+    float m_targetAngularVelocity;
+
+    // Command information
+    Command* m_pDefaultCommand;
+    Command* m_pWaitingCommand;
+    Command* m_pCommand;
+
+    // Metadata
+    Team m_team;
+    unsigned char m_id;
 };
 
 #endif // ROBOT_H

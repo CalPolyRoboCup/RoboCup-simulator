@@ -17,6 +17,9 @@ Robot::Robot(Team team, unsigned char id) :
     m_team(team),
     m_id(id)
 {
+    m_pDefaultCommand = 0;
+    m_pWaitingCommand = 0;
+    m_pCommand = 0;
 }
 
 void Robot::refresh(SSL_DetectionRobot& robot)
@@ -35,7 +38,7 @@ void Robot::refresh(SSL_DetectionRobot& robot)
     }
 }
 
-void Robot::update(grSim_Robot_Command* pCommand, double deltaTime)
+void Robot::updateStats(double deltaTime)
 {
     // Update the speed of the robot
     if (m_position != m_lastPosition)
@@ -54,7 +57,45 @@ void Robot::update(grSim_Robot_Command* pCommand, double deltaTime)
         m_angularVelocity = (m_orientation - m_lastOrientation) / deltaTime;
         m_lastOrientation = m_orientation;
     }
+}
 
+void Robot::updateCommand(double deltaTime)
+{
+    if (m_pWaitingCommand != 0)
+    {
+        if (m_pCommand != 0)
+        {
+            m_pCommand->interrupted();
+            m_pCommand->end();
+        }
+
+        m_pCommand = m_pWaitingCommand;
+        m_pWaitingCommand = 0;
+        m_pCommand->start();
+    }
+
+    if (m_pCommand != 0)
+    {
+        if (m_pCommand->isFinished())
+        {
+            m_pCommand->end();
+            m_pCommand = 0;
+        }
+        else
+        {
+            m_pCommand->update(deltaTime);
+        }
+    }
+
+    if (m_pCommand == 0 && m_pDefaultCommand != 0)
+    {
+        m_pCommand = m_pDefaultCommand;
+        m_pCommand->start();
+    }
+}
+
+void Robot::writeOutput(grSim_Robot_Command *pCommand)
+{
     // Define the ID of the robot
     pCommand->set_id(m_id);
 
@@ -91,4 +132,20 @@ void Robot::setTargetDirection(float angle)
 void Robot::setTargetAngularVelocity(float velocity)
 {
     m_targetAngularVelocity = velocity;
+}
+
+void Robot::setDefaultCommand(Command *pCommand)
+{
+    if (pCommand->setRobot(this))
+        m_pDefaultCommand = pCommand;
+    else
+        std::cout << "Cannot set a default Command that's already been assigned to another robot!\n";
+}
+
+void Robot::runCommmand(Command *pCommand)
+{
+    if (pCommand->setRobot(this))
+        m_pWaitingCommand = pCommand;
+    else
+        std::cout << "Cannot run a Command that's already been assigned to another robot!\n";
 }

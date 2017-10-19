@@ -4,27 +4,25 @@
 #include <QKeyEvent>
 #include <qmath.h>
 #include <cmath>
+#include "TestCommand.h"
 
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
-    Master(port, netAddress, parent),
-    m_team(team)
+    Master(port, netAddress, team, parent)
 {
-    m_teamBots = m_team == YELLOW ? m_yellowBots : m_blueBots;
     m_pUdpSocket = new QUdpSocket();
+
+    getTeamBot(0)->runCommmand(new TestCommand(this));
 }
 
-void ClientMaster::update(double deltaTime)
+void ClientMaster::writeOutput()
 {
     // Creates the packet and initializes the metadata
     grSim_Packet simPacket;
-    simPacket.mutable_commands()->set_isteamyellow(m_team == YELLOW);
+    simPacket.mutable_commands()->set_isteamyellow(getTeam() == YELLOW);
     simPacket.mutable_commands()->set_timestamp(0.0);
 
-    // Update each robot on the controlling team
     for (int i = 0; i < TEAM_SIZE; i++)
-        m_teamBots[i]->update(simPacket.mutable_commands()->add_robot_commands(), deltaTime);
-
-    m_ball->update(deltaTime);
+        getTeamBot(i)->writeOutput(simPacket.mutable_commands()->add_robot_commands());
 
     // Serialize the packet and send it to grSim
     QByteArray dgram;
@@ -60,7 +58,7 @@ void ClientMaster::updateDirections(int key, bool pressed)
         m_directions.erase(std::remove(m_directions.begin(), m_directions.end(), key), m_directions.end());
     }
 
-    Robot* r = m_teamBots[0];
+    Robot* r = getTeamBot(0);
 
     if (m_directions.empty())
     {
@@ -71,7 +69,7 @@ void ClientMaster::updateDirections(int key, bool pressed)
         float targetDirection = getKeyIndex(m_directions.back()) * M_PI * 0.5;
 
         r->setTargetDirection(targetDirection);
-        r->setTargetSpeed(3.0f);
+        r->setTargetSpeed(1.0f);
     }
 }
 

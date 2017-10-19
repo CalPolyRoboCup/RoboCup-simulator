@@ -51,7 +51,7 @@ public:
      * @brief Updates the velocity information of the ball with the given delta time
      * @param deltaTime The time passed in seconds since the last update call
      */
-    void update(double deltaTime);
+    void updateStats(double deltaTime);
 };
 
 #endif // BALL_H
