@@ -4,14 +4,14 @@
 #include <QKeyEvent>
 #include <qmath.h>
 #include <cmath>
-#include "TestCommand.h"
+#include "tests/TestCommandSeries.h".h"
 
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
     Master(port, netAddress, team, parent)
 {
     m_pUdpSocket = new QUdpSocket();
 
-    getTeamBot(0)->runCommmand(new TestCommand(this));
+    getTeamBot(0)->runCommmand(new TestCommandSeries(this));
 }
 
 void ClientMaster::writeOutput()

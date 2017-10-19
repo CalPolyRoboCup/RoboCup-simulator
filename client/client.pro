@@ -13,7 +13,9 @@ SOURCES += \
     src/Master.cpp \
     src/Ball.cpp \
     src/Command.cpp \
-    src/TestCommand.cpp
+    src/tests/TestCommand.cpp \
+    src/CommandSeries.cpp \
+    src/tests/TestCommandSeries.cpp
 
 HEADERS += \
     src/robocup_ssl_client.h \
@@ -30,7 +32,9 @@ HEADERS += \
     src/Ball.h \
     src/Command.h \
     src/Team.h \
-    src/TestCommand.h
+    src/tests/TestCommand.h \
+    src/CommandSeries.h \
+    src/tests/TestCommandSeries.h
 
 QT += network
 

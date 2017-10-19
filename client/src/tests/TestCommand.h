@@ -1,12 +1,12 @@
 #ifndef TESTCOMMAND_H
 #define TESTCOMMAND_H
 
-#include "Command.h"
+#include "../Command.h"
 
 class TestCommand : public Command
 {
 public:
-    TestCommand(Master* pMaster);
+    TestCommand(Master* pMaster, std::string name, int lifetime);
 
     virtual void start();
     virtual void update(double deltaTime);
@@ -14,6 +14,8 @@ public:
     virtual void end();
 
 private:
+    std::string m_name;
+    int m_lifetime;
     int m_numFrames;
 };
 
