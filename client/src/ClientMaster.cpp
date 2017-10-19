@@ -4,7 +4,7 @@
 #include <QKeyEvent>
 #include <qmath.h>
 #include <cmath>
-#include "tests/TestCommandSeries.h".h"
+#include "tests/TestCommandSeries.h"
 
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
     Master(port, netAddress, team, parent)
