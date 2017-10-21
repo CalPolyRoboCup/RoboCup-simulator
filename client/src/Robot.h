@@ -4,6 +4,7 @@
 #include <QVector2D>
 #include "Command.h"
 #include "Team.h"
+#include "PID.h"
 #include "messages_robocup_ssl_wrapper.pb.h"
 #include "grSim_Packet.pb.h"
 
@@ -56,6 +57,26 @@ public:
      */
     float getAngularVelocity() const { return m_angularVelocity; }
 
+    // Target value getters
+
+    /**
+     * @brief Used for accessing the target speed of the robot
+     * @return The target speed of the robot in m/s
+     */
+    float getTargetSpeed() const { return m_targetSpeed; }
+
+    /**
+     * @brief Used for accessing the target direction of the robot
+     * @return The target direction of the robot in radians
+     */
+    float getTargetDirection() const { return m_targetDirection; }
+
+    /**
+     * @brief Used for accessing the target orientation of the robot
+     * @return The target orientation of the robot in radians
+     */
+    float getTargetOrientation() const { return m_orientationPid->getSetpoint(); }
+
     // Metadata getters
 
     /**
@@ -97,7 +118,7 @@ public:
      */
     void writeOutput(grSim_Robot_Command* pCommand);
 
-    // Velocity setters
+    // Target value setters
 
     /**
      * @brief Sets the target speed of the robot
@@ -112,10 +133,10 @@ public:
     void setTargetDirection(float angle);
 
     /**
-     * @brief Sets the target angular velocity of the robot
-     * @param velocity The target velocity in rad/s
+     * @brief Sets the target orientation of the robot
+     * @param angle The angle in radians
      */
-    void setTargetAngularVelocity(float velocity);
+    void setTargetOrientation(float angle);
 
     /**
      * @brief Sets the command to be executed before one is assigned or after a command ends
@@ -149,7 +170,11 @@ private:
     // Target velocity information
     float m_targetSpeed;
     float m_targetDirection;
+    float m_targetOrientation;
     float m_targetAngularVelocity;
+
+    // PID information
+    PID* m_orientationPid;
 
     // Command information
     Command* m_pDefaultCommand;

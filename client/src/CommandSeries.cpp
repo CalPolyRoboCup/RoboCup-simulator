@@ -1,4 +1,5 @@
 #include "CommandSeries.h"
+#include <iostream>
 
 CommandSeries::CommandSeries(Master* pMaster) :
     Command(pMaster),
@@ -17,6 +18,16 @@ void CommandSeries::start()
 {
     if (!m_commands.empty())
     {
+        for (int i = 0; i < m_commands.size(); i++)
+        {
+            if (!m_commands[i]->setRobot(m_pRobot))
+            {
+                m_isFinished = true;
+                std::cout << "Cannot add a Command to a CommandSeries that's already been added to another robot!\n";
+                return;
+            }
+        }
+
         m_pCommand = m_commands.front();
         m_pCommand->start();
     }

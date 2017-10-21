@@ -17,6 +17,8 @@ Robot::Robot(Team team, unsigned char id) :
     m_team(team),
     m_id(id)
 {
+    m_orientationPid = new PID(10.0, 0.0, 0.25, -M_PI * 4, M_PI * 4);
+
     m_pDefaultCommand = 0;
     m_pWaitingCommand = 0;
     m_pCommand = 0;
@@ -46,7 +48,7 @@ void Robot::updateStats(double deltaTime)
         m_speed = (m_position - m_lastPosition).length() / deltaTime * 0.001;
 
         if (m_speed > 0)
-            m_direction = std::atan2(-(m_position.y() - m_lastPosition.y()), m_position.x() - m_lastPosition.x());
+            m_direction = std::atan2(m_position.y() - m_lastPosition.y(), m_position.x() - m_lastPosition.x());
 
         m_lastPosition = m_position;
     }
@@ -92,6 +94,11 @@ void Robot::updateCommand(double deltaTime)
         m_pCommand = m_pDefaultCommand;
         m_pCommand->start();
     }
+
+    if (std::abs(m_orientation - m_targetOrientation) > std::abs((m_orientation + 2 * M_PI) - m_targetOrientation))
+        m_targetAngularVelocity = m_orientationPid->calculate(deltaTime, m_orientation + 2 * M_PI);
+    else
+        m_targetAngularVelocity = m_orientationPid->calculate(deltaTime, m_orientation);
 }
 
 void Robot::writeOutput(grSim_Robot_Command *pCommand)
@@ -110,7 +117,7 @@ void Robot::writeOutput(grSim_Robot_Command *pCommand)
     pCommand->set_veltangent(m_targetSpeed * std::cos(m_targetDirection + m_orientation));
 
     // Calculate the vertical speed from the target speed, taret direction, and orientation
-    pCommand->set_velnormal(m_targetSpeed * -std::sin(m_targetDirection + m_orientation));
+    pCommand->set_velnormal(-m_targetSpeed * std::sin(m_targetDirection + m_orientation));
     pCommand->set_velangular(m_targetAngularVelocity);
 
     // Set kicker speeds (TODO: implement the kicker)
@@ -129,9 +136,10 @@ void Robot::setTargetDirection(float angle)
     m_targetDirection = angle;
 }
 
-void Robot::setTargetAngularVelocity(float velocity)
+void Robot::setTargetOrientation(float angle)
 {
-    m_targetAngularVelocity = velocity;
+    m_targetOrientation = angle;
+    m_orientationPid->setSetpoint(angle);
 }
 
 void Robot::setDefaultCommand(Command *pCommand)

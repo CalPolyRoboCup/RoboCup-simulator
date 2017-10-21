@@ -15,7 +15,9 @@ SOURCES += \
     src/Command.cpp \
     src/tests/TestCommand.cpp \
     src/CommandSeries.cpp \
-    src/tests/TestCommandSeries.cpp
+    src/tests/TestCommandSeries.cpp \
+    src/PID.cpp \
+    src/tests/OrientRobot.cpp
 
 HEADERS += \
     src/robocup_ssl_client.h \
@@ -34,7 +36,9 @@ HEADERS += \
     src/Team.h \
     src/tests/TestCommand.h \
     src/CommandSeries.h \
-    src/tests/TestCommandSeries.h
+    src/tests/TestCommandSeries.h \
+    src/PID.h \
+    src/tests/OrientRobot.h
 
 QT += network
 
