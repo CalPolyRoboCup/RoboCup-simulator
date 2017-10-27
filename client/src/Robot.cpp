@@ -95,7 +95,9 @@ void Robot::updateCommand(double deltaTime)
         m_pCommand->start();
     }
 
-    if (std::abs(m_orientation - m_targetOrientation) > std::abs((m_orientation + 2 * M_PI) - m_targetOrientation))
+    float orientationSetpoint = m_orientationPid->getSetpoint();
+
+    if (std::abs(m_orientation - orientationSetpoint) > std::abs((m_orientation + 2 * M_PI) - orientationSetpoint))
         m_targetAngularVelocity = m_orientationPid->calculate(deltaTime, m_orientation + 2 * M_PI);
     else
         m_targetAngularVelocity = m_orientationPid->calculate(deltaTime, m_orientation);
@@ -139,6 +141,14 @@ void Robot::setTargetDirection(float angle)
 void Robot::setTargetOrientation(float angle)
 {
     m_targetOrientation = angle;
+
+    while (angle < 0)
+        angle += M_PI * 2;
+
+    while (angle > M_PI * 2)
+        angle -= M_PI * 2;
+
+
     m_orientationPid->setSetpoint(angle);
 }
 

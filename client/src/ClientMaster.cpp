@@ -4,14 +4,14 @@
 #include <QKeyEvent>
 #include <qmath.h>
 #include <cmath>
-#include "tests/OrientRobot.h"
+#include "commands/PassToRobot.h".h"
 
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
     Master(port, netAddress, team, parent)
 {
     m_pUdpSocket = new QUdpSocket();
 
-    getTeamBot(0)->runCommmand(new OrientRobot(this));
+    getTeamBot(0)->runCommmand(new PassToRobot(this, getTeamBot(2)));
 }
 
 void ClientMaster::writeOutput()

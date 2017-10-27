@@ -17,7 +17,10 @@ SOURCES += \
     src/CommandSeries.cpp \
     src/tests/TestCommandSeries.cpp \
     src/PID.cpp \
-    src/tests/OrientRobot.cpp
+    src/tests/OrientRobot.cpp \
+    src/commands/PassToRobot.cpp \
+    src/commands/AimAtRobot.cpp \
+    src/MathHelper.cpp
 
 HEADERS += \
     src/robocup_ssl_client.h \
@@ -38,7 +41,10 @@ HEADERS += \
     src/CommandSeries.h \
     src/tests/TestCommandSeries.h \
     src/PID.h \
-    src/tests/OrientRobot.h
+    src/tests/OrientRobot.h \
+    src/commands/PassToRobot.h \
+    src/commands/AimAtRobot.h \
+    src/MathHelper.h
 
 QT += network
 
