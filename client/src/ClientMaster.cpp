@@ -4,7 +4,8 @@
 #include <QKeyEvent>
 #include <qmath.h>
 #include <cmath>
-#include "commands/PassToRobot.h".h"
+#include "commands/PassToRobot.h"
+#include "tests/OrientRobot.h"
 
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
     Master(port, netAddress, team, parent)
@@ -12,6 +13,7 @@ ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team,
     m_pUdpSocket = new QUdpSocket();
 
     getTeamBot(0)->runCommmand(new PassToRobot(this, getTeamBot(2)));
+    getTeamBot(2)->runCommmand(new OrientRobot(this));
 }
 
 void ClientMaster::writeOutput()
@@ -58,7 +60,7 @@ void ClientMaster::updateDirections(int key, bool pressed)
         m_directions.erase(std::remove(m_directions.begin(), m_directions.end(), key), m_directions.end());
     }
 
-    Robot* r = getTeamBot(0);
+    Robot* r = getTeamBot(2);
 
     if (m_directions.empty())
     {
