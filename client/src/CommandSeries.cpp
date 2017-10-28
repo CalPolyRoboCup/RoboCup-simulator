@@ -2,9 +2,7 @@
 #include <iostream>
 
 CommandSeries::CommandSeries(Master* pMaster) :
-    Command(pMaster),
-    m_commandIndex(0),
-    m_isFinished(false)
+    Command(pMaster)
 {
     m_pCommand = 0;
 }
@@ -14,23 +12,23 @@ void CommandSeries::addCommand(Command* pCommand)
     m_commands.push_back(pCommand);
 }
 
-void CommandSeries::start()
+void CommandSeries::init()
 {
     if (!m_commands.empty())
     {
         for (int i = 0; i < m_commands.size(); i++)
-        {
             if (!m_commands[i]->setRobot(m_pRobot))
-            {
-                m_isFinished = true;
-                std::cout << "Cannot add a Command to a CommandSeries that's already been added to another robot!\n";
-                return;
-            }
-        }
-
-        m_pCommand = m_commands.front();
-        m_pCommand->start();
+                std::cout << "Warning: cannot add Commands to a CommandSeries that have already been added to another robot!\n";
     }
+}
+
+void CommandSeries::start()
+{
+    m_commandIndex = 0;
+    m_isFinished = false;
+
+    m_pCommand = m_commands.front();
+    m_pCommand->start();
 }
 
 void CommandSeries::update(double deltaTime)

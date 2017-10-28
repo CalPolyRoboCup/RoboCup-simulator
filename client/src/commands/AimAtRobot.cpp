@@ -9,6 +9,11 @@ AimAtRobot::AimAtRobot(Master* pMaster, Robot* pTargetRobot) :
     m_pTargetRobot = pTargetRobot;
 }
 
+void AimAtRobot::start()
+{
+    m_targetPos = QVector2D(0, 0);
+}
+
 void AimAtRobot::update(double deltaTime)
 {
     QVector2D robotPos = m_pRobot->getPosition();
@@ -18,18 +23,25 @@ void AimAtRobot::update(double deltaTime)
     m_pRobot->setTargetOrientation(targetOrientation);
 
     QVector2D targetRobotPos = m_pTargetRobot->getPosition();
-    QVector2D targetPos = ballPos + (ballPos - targetRobotPos).normalized() * 240;
+    m_targetPos = ballPos + (ballPos - targetRobotPos).normalized() * AIM_ORBIT_RADIUS;
 
-    m_pRobot->setTargetSpeed(std::min((robotPos - targetPos).length() * 0.005, 1.0));
+    m_pRobot->setTargetSpeed(std::min((float)(robotPos - m_targetPos).length() * AIM_VELOCITY_THRESHOLD, 1.0f));
 
-    if ((robotPos - ballPos).length() < (robotPos - targetPos).length())
-        targetPos = ballPos - (ballPos - MathHelper::getClosestPoint(robotPos, targetPos, ballPos)).normalized() * 240;
+    QVector2D currentTargetPos = m_targetPos;
 
-    float targetDirection = -std::atan2(targetPos.y() - robotPos.y(), targetPos.x() - robotPos.x());
+    if ((robotPos - ballPos).length() < (robotPos - currentTargetPos).length())
+        currentTargetPos = ballPos - (ballPos - MathHelper::getClosestPoint(robotPos, currentTargetPos, ballPos)).normalized() * AIM_ORBIT_RADIUS;
+
+    float targetDirection = -std::atan2(currentTargetPos.y() - robotPos.y(), currentTargetPos.x() - robotPos.x());
     m_pRobot->setTargetDirection(targetDirection);
 }
 
 bool AimAtRobot::isFinished()
 {
-    return false;
+    return (m_pRobot->getPosition() - m_targetPos).length() < AIM_MAXIMUM_DISTANCE;
+}
+
+void AimAtRobot::end()
+{
+    m_pRobot->setTargetSpeed(0.0f);
 }

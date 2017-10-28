@@ -16,6 +16,8 @@ public:
      */
     CommandSeries(Master* pMaster);
 
+    virtual void init();
+
     virtual void start();
 
     virtual void update(double deltaTime);

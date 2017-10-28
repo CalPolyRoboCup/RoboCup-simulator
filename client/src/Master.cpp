@@ -9,7 +9,8 @@ Master::Master(qint16 port, const std::string netAddress, Team team, QWidget* pa
     QWidget(parent),
     m_WIDTH(1040),
     m_HEIGHT(740),
-    m_team(team)
+    m_team(team),
+    m_framesUntilStart(2)
 {
     setWindowTitle("Cal Poly RoboCup SSL Engine");
     setFixedSize(m_WIDTH, m_HEIGHT);
@@ -67,7 +68,11 @@ void Master::run()
         if (deltaTime > 0.0)
         {
             m_lastUpdateTime = updateTime;
-            update(deltaTime);
+
+            if (m_framesUntilStart > 0)
+                m_framesUntilStart--;
+            else
+                update(deltaTime);
         }
 
         // Update each yellow robot

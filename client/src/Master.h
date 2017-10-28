@@ -80,6 +80,8 @@ private:
     const int m_WIDTH;
     const int m_HEIGHT;
 
+    int m_framesUntilStart;
+
     Robot* m_yellowBots[TEAM_SIZE];
     Robot* m_blueBots[TEAM_SIZE];
 

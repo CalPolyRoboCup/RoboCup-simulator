@@ -12,7 +12,7 @@ ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team,
 {
     m_pUdpSocket = new QUdpSocket();
 
-    getTeamBot(0)->runCommmand(new PassToRobot(this, getTeamBot(2)));
+    getTeamBot(0)->setDefaultCommand(new PassToRobot(this, getTeamBot(2)));
     getTeamBot(2)->runCommmand(new OrientRobot(this));
 }
 

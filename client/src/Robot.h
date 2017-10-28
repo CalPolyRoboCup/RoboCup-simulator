@@ -72,6 +72,12 @@ public:
     float getTargetDirection() const { return m_targetDirection; }
 
     /**
+     * @brief Used for accessing the kicker speed of the robot
+     * @return The kicker speed of the robot
+     */
+    float getKickerSpeed() const { return m_kickerSpeed; }
+
+    /**
      * @brief Used for accessing the target orientation of the robot
      * @return The target orientation of the robot in radians
      */
@@ -139,6 +145,12 @@ public:
     void setTargetOrientation(float angle);
 
     /**
+     * @brief Sets the speed of the kicker on the robot
+     * @param speed The speed to set the kicker
+     */
+    void setKickerSpeed(float speed);
+
+    /**
      * @brief Sets the command to be executed before one is assigned or after a command ends
      * @param pCommand The default command
      */
@@ -166,6 +178,7 @@ private:
     float m_speed;
     float m_direction;
     float m_angularVelocity;
+    float m_kickerSpeed;
 
     // Target velocity information
     float m_targetSpeed;

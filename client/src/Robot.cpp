@@ -14,6 +14,7 @@ Robot::Robot(Team team, unsigned char id) :
     m_targetSpeed(0),
     m_targetDirection(0),
     m_targetAngularVelocity(0),
+    m_kickerSpeed(0),
     m_team(team),
     m_id(id)
 {
@@ -122,8 +123,8 @@ void Robot::writeOutput(grSim_Robot_Command *pCommand)
     pCommand->set_velnormal(-m_targetSpeed * std::sin(m_targetDirection + m_orientation));
     pCommand->set_velangular(m_targetAngularVelocity);
 
-    // Set kicker speeds (TODO: implement the kicker)
-    pCommand->set_kickspeedx(0.0f);
+    // Set kicker speeds
+    pCommand->set_kickspeedx(m_kickerSpeed);
     pCommand->set_kickspeedz(0.0f);
     pCommand->set_spinner(false);
 }
@@ -152,18 +153,33 @@ void Robot::setTargetOrientation(float angle)
     m_orientationPid->setSetpoint(angle);
 }
 
+void Robot::setKickerSpeed(float speed)
+{
+    m_kickerSpeed = speed;
+}
+
 void Robot::setDefaultCommand(Command *pCommand)
 {
     if (pCommand->setRobot(this))
+    {
         m_pDefaultCommand = pCommand;
+        pCommand->init();
+    }
     else
+    {
         std::cout << "Cannot set a default Command that's already been assigned to another robot!\n";
+    }
 }
 
 void Robot::runCommmand(Command *pCommand)
 {
     if (pCommand->setRobot(this))
+    {
         m_pWaitingCommand = pCommand;
+        pCommand->init();
+    }
     else
+    {
         std::cout << "Cannot run a Command that's already been assigned to another robot!\n";
+    }
 }

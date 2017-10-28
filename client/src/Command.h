@@ -26,6 +26,11 @@ public:
     bool setRobot(Robot* pRobot);
 
     /**
+     * @brief Called when the Command is first assigned to a robot
+     */
+    virtual void init() { }
+
+    /**
      * @brief Called when the Command is first started
      */
     virtual void start() { }

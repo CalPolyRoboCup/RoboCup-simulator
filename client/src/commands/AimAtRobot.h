@@ -3,6 +3,10 @@
 
 #include "../Command.h"
 
+#define AIM_ORBIT_RADIUS 240.0f
+#define AIM_VELOCITY_THRESHOLD 0.005f
+#define AIM_MAXIMUM_DISTANCE 5.0f
+
 /**
  * @brief The AimAtRobot @see Command is used for positioning the robot so the ball lies between this robot and the target robot
  */
@@ -16,12 +20,18 @@ public:
      */
     AimAtRobot(Master* pMaster, Robot* pTargetRobot);
 
+    virtual void start();
+
     virtual void update(double deltaTime);
 
     virtual bool isFinished();
 
+    virtual void end();
+
 private:
     Robot* m_pTargetRobot;
+
+    QVector2D m_targetPos;
 };
 
 #endif // AIMATROBOT_H
