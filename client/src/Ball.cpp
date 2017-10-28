@@ -19,7 +19,7 @@ void Ball::refresh(SSL_DetectionBall& ball)
     {
         m_initialized = true;
         m_lastPosition = m_position;
-    }asdf
+    }
 }
 
 void Ball::updateStats(double deltaTime)
