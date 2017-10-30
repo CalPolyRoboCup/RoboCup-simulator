@@ -39,7 +39,7 @@ void CatchBall::end()
     m_pRobot->setTargetSpeed(0.0f);
 
     int nextIndex = (m_pRobot->getId() + 1) % 6;
-    m_pRobot->runCommmand(new PassToRobot(m_pMaster,  m_pMaster->getTeamBot(nextIndex)));
+    m_pRobot->runCommmand(new PassToRobot(m_pMaster, m_pMaster->getTeamBot(nextIndex)));
 
     destroy();
 }

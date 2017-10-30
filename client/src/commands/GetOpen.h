@@ -3,6 +3,8 @@
 
 #include "../Command.h"
 
+#define GETOPEN_VELOCITY_THRESHOLD 0.005f
+
 class GetOpen : public Command
 {
 public:
@@ -12,9 +14,15 @@ public:
      */
     GetOpen(Master* pMaster);
 
+    virtual void start();
+
     virtual void update(double deltaTime);
 
     virtual bool isFinished();
+
+private:
+    QVector2D m_startPosition;
+
 };
 
 #endif // GETOPEN_H
