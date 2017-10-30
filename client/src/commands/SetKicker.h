@@ -6,6 +6,11 @@
 class SetKicker : public Command
 {
 public:
+    /**
+     * @brief Creates a new SetKicker instance
+     * @param pMaster The master instance associated with the SetKicker command
+     * @param speed The speed to set the kicker to
+     */
     SetKicker(Master* pMaster, float speed);
 
     virtual void start();

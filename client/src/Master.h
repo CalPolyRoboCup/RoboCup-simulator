@@ -10,6 +10,7 @@
 #include "robocup_ssl_client.h"
 
 #define TEAM_SIZE 6
+#define FIXED_DELTA_TIME 1.0f/60.0f
 
 class Robot;
 
@@ -97,7 +98,7 @@ private:
 
     RoboCupSSLClient* m_pClient;
     QTimer* m_pTimer;
-    double m_lastUpdateTime;
+    int m_lastFrameNumber;
 
     void update(double deltaTime);
 

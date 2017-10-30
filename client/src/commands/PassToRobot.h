@@ -12,6 +12,11 @@ public:
      * @param pTargetRobot The robot to pass the ball to
      */
     PassToRobot(Master* pMaster, Robot* pTargetRobot);
+
+    virtual void end();
+
+private:
+    Robot* m_pTargetRobot;
 };
 
 #endif // PASSTOROBOT_H

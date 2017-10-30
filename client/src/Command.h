@@ -26,9 +26,9 @@ public:
     bool setRobot(Robot* pRobot);
 
     /**
-     * @brief Called when the Command is first assigned to a robot
+     * @brief Used for deallocating a Command instance.
      */
-    virtual void init() { }
+    void destroy() { delete this; }
 
     /**
      * @brief Called when the Command is first started
@@ -57,9 +57,26 @@ public:
      */
     virtual void end() { }
 
+    /**
+     * @brief Returns the @see Robot associated with this Command
+     * @return The @see Robot associated with this Comand
+     */
+    Robot* getRobot() const { return m_pRobot; }
+
 protected:
     Master* m_pMaster;
     Robot* m_pRobot;
+
+    /**
+     * @brief The virtual destructor
+     * @note The destructor is protected to prevent allocation of Commands on the stack
+     */
+    virtual ~Command() { }
+
+    /**
+     * @brief Called when the Command is first assigned to a robot
+     */
+    virtual void init() { }
 
 };
 

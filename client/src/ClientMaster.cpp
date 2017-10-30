@@ -5,15 +5,18 @@
 #include <qmath.h>
 #include <cmath>
 #include "commands/PassToRobot.h"
-#include "tests/OrientRobot.h"
+#include "commands/AimAtRobot.h"
+#include "commands/GetOpen.h"
 
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
     Master(port, netAddress, team, parent)
 {
     m_pUdpSocket = new QUdpSocket();
 
-    getTeamBot(0)->setDefaultCommand(new PassToRobot(this, getTeamBot(2)));
-    getTeamBot(2)->runCommmand(new OrientRobot(this));
+    for (int i = 0; i < TEAM_SIZE; i++)
+        getTeamBot(i)->setDefaultCommand(new GetOpen(this));
+
+    getTeamBot(0)->runCommmand(new PassToRobot(this, getTeamBot(1)));
 }
 
 void ClientMaster::writeOutput()
@@ -31,63 +34,4 @@ void ClientMaster::writeOutput()
     dgram.resize(simPacket.ByteSize());
     simPacket.SerializeToArray(dgram.data(), dgram.size());
     m_pUdpSocket->writeDatagram(dgram, QHostAddress("127.0.0.1"), 20011);
-}
-
-void ClientMaster::keyPressEvent(QKeyEvent* e)
-{
-    updateDirections(e->key(), true);
-}
-
-void ClientMaster::keyReleaseEvent(QKeyEvent* e)
-{
-    updateDirections(e->key(), false);
-}
-
-void ClientMaster::updateDirections(int key, bool pressed)
-{
-    if (pressed)
-    {
-        if (getKeyIndex(key) == -1)
-            return;
-
-        m_directions.push_back(key);
-    }
-    else
-    {
-        if (std::find(m_directions.begin(), m_directions.end(), key) == m_directions.end())
-            return;
-
-        m_directions.erase(std::remove(m_directions.begin(), m_directions.end(), key), m_directions.end());
-    }
-
-    Robot* r = getTeamBot(2);
-
-    if (m_directions.empty())
-    {
-        r->setTargetSpeed(0.0f);
-    }
-    else
-    {
-        float targetDirection = getKeyIndex(m_directions.back()) * M_PI * 0.5;
-
-        r->setTargetDirection(targetDirection);
-        r->setTargetSpeed(1.0f);
-    }
-}
-
-int ClientMaster::getKeyIndex(int key)
-{
-    switch (key)
-    {
-    case Qt::Key_Right:
-        return 0;
-    case Qt::Key_Down:
-        return 1;
-    case Qt::Key_Left:
-        return 2;
-    case Qt::Key_Up:
-        return 3;
-    default:
-        return -1;
-    }
 }

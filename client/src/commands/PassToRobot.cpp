@@ -3,13 +3,22 @@
 #include "PassBall.h"
 #include "SetKicker.h"
 #include "Delay.h"
+#include "CatchBall.h"
 
 PassToRobot::PassToRobot(Master* pMaster, Robot* pTargetRobot) :
     CommandSeries(pMaster)
 {
+    m_pTargetRobot = pTargetRobot;
+
     addCommand(new AimAtRobot(pMaster, pTargetRobot));
     addCommand(new PassBall(pMaster, pTargetRobot));
     addCommand(new SetKicker(pMaster, 3.0f));
     addCommand(new Delay(pMaster, 0.25f));
     addCommand(new SetKicker(pMaster, 0.0f));
+}
+
+void PassToRobot::end()
+{
+    m_pTargetRobot->runCommmand(new CatchBall(m_pMaster));
+    destroy();
 }

@@ -10,6 +10,11 @@
 class PassBall : public Command
 {
 public:
+    /**
+     * @brief Creates a new PassBall instance
+     * @param pMaster The Master instance associated with the command
+     * @param pTargetRobot The @see Robot to pass the ball to
+     */
     PassBall(Master* pMaster, Robot* pTargetRobot);
 
     virtual void update(double deltaTime);

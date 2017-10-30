@@ -12,5 +12,7 @@ bool Command::setRobot(Robot *pRobot)
         return false;
 
     m_pRobot = pRobot;
+    init();
+
     return true;
 }

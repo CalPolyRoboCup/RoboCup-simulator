@@ -29,7 +29,7 @@ void AimAtRobot::update(double deltaTime)
 
     QVector2D currentTargetPos = m_targetPos;
 
-    if ((robotPos - ballPos).length() < (robotPos - currentTargetPos).length())
+    if ((robotPos - currentTargetPos).length() > AIM_ORBIT_RADIUS)
         currentTargetPos = ballPos - (ballPos - MathHelper::getClosestPoint(robotPos, currentTargetPos, ballPos)).normalized() * AIM_ORBIT_RADIUS;
 
     float targetDirection = -std::atan2(currentTargetPos.y() - robotPos.y(), currentTargetPos.x() - robotPos.x());

@@ -16,8 +16,6 @@ public:
      */
     CommandSeries(Master* pMaster);
 
-    virtual void init();
-
     virtual void start();
 
     virtual void update(double deltaTime);
@@ -30,6 +28,8 @@ protected:
      * @param pCommand The @see Command to add
      */
     void addCommand(Command* pCommand);
+
+    virtual void init();
 
 private:
     std::vector<Command*> m_commands;

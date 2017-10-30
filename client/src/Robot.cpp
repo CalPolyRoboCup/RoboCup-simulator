@@ -149,7 +149,6 @@ void Robot::setTargetOrientation(float angle)
     while (angle > M_PI * 2)
         angle -= M_PI * 2;
 
-
     m_orientationPid->setSetpoint(angle);
 }
 
@@ -160,26 +159,16 @@ void Robot::setKickerSpeed(float speed)
 
 void Robot::setDefaultCommand(Command *pCommand)
 {
-    if (pCommand->setRobot(this))
-    {
+    if (pCommand->getRobot() == this || pCommand->setRobot(this))
         m_pDefaultCommand = pCommand;
-        pCommand->init();
-    }
     else
-    {
         std::cout << "Cannot set a default Command that's already been assigned to another robot!\n";
-    }
 }
 
 void Robot::runCommmand(Command *pCommand)
 {
-    if (pCommand->setRobot(this))
-    {
+    if (pCommand->getRobot() == this || pCommand->setRobot(this))
         m_pWaitingCommand = pCommand;
-        pCommand->init();
-    }
     else
-    {
         std::cout << "Cannot run a Command that's already been assigned to another robot!\n";
-    }
 }

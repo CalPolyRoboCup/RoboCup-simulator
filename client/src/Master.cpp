@@ -10,6 +10,7 @@ Master::Master(qint16 port, const std::string netAddress, Team team, QWidget* pa
     m_WIDTH(1040),
     m_HEIGHT(740),
     m_team(team),
+    m_lastFrameNumber(0),
     m_framesUntilStart(2)
 {
     setWindowTitle("Cal Poly RoboCup SSL Engine");
@@ -62,17 +63,17 @@ void Master::run()
         SSL_DetectionFrame frame = wrapperPacket.detection();
 
         // Calculate the delta time and update the robots if this is the start of a new frame
-        double updateTime = frame.t_capture();
-        double deltaTime = updateTime - m_lastUpdateTime;
+        int frameNumber = frame.frame_number();
+        int deltaFrames = frameNumber - m_lastFrameNumber;
 
-        if (deltaTime > 0.0)
+        if (deltaFrames > 0)
         {
-            m_lastUpdateTime = updateTime;
+            m_lastFrameNumber = frameNumber;
 
             if (m_framesUntilStart > 0)
                 m_framesUntilStart--;
             else
-                update(deltaTime);
+                update(deltaFrames * FIXED_DELTA_TIME);
         }
 
         // Update each yellow robot
