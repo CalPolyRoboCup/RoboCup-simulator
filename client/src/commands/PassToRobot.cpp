@@ -12,7 +12,7 @@ PassToRobot::PassToRobot(Master* pMaster, Robot* pTargetRobot) :
 
     addCommand(new AimAtRobot(pMaster, pTargetRobot));
     addCommand(new PassBall(pMaster, pTargetRobot));
-    addCommand(new SetKicker(pMaster, 3.0f));
+    addCommand(new SetKicker(pMaster, 4.0f));
     addCommand(new Delay(pMaster, 0.25f));
     addCommand(new SetKicker(pMaster, 0.0f));
 }
