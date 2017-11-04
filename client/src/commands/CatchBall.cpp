@@ -20,7 +20,7 @@ void CatchBall::update(double deltaTime)
 
     QVector2D targetPos = MathHelper::getClosestPoint(ballPos, ballPos + m_ballDirectionVector, robotPos);
 
-    float targetDirection = -std::atan2(targetPos.y() - robotPos.y(), targetPos.x() - robotPos.x());
+    float targetDirection = -MathHelper::getLineAngle(robotPos, targetPos);
 
     m_pRobot->setTargetDirection(targetDirection);
     m_pRobot->setTargetSpeed(std::min((float)(robotPos - targetPos).length() * CATCH_VELOCITY_THRESHOLD, 1.0f));
@@ -36,10 +36,12 @@ bool CatchBall::isFinished()
 
 void CatchBall::end()
 {
+    // vvv This is just for testing
     m_pRobot->setTargetSpeed(0.0f);
 
     int nextIndex = (m_pRobot->getId() + 1) % 6;
     m_pRobot->runCommmand(new PassToRobot(m_pMaster, m_pMaster->getTeamBot(nextIndex)));
+    // ^^^
 
     destroy();
 }

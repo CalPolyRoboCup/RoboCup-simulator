@@ -11,4 +11,9 @@ namespace MathHelper
 
         return QVector2D(t * dir.x() + lineStart.x(), t * dir.y() + lineStart.y());
     }
+
+    float getLineAngle(QVector2D pointA, QVector2D pointB)
+    {
+        return std::atan2(pointB.y() - pointA.y(), pointB.x() - pointA.x());
+    }
 }

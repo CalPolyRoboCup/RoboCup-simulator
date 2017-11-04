@@ -20,3 +20,8 @@ bool Delay::isFinished()
 {
     return m_secondsPassed >= m_delayTime;
 }
+
+void Delay::end()
+{
+    destroy();
+}

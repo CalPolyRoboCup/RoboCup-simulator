@@ -1,4 +1,5 @@
 #include "GetOpen.h"
+#include "../MathHelper.h"
 #include <cmath>
 
 GetOpen::GetOpen(Master* pMaster) :
@@ -18,12 +19,12 @@ void GetOpen::update(double deltaTime)
 
     m_pRobot->setTargetSpeed(std::min((float)(robotPos - m_startPosition).length() * GETOPEN_VELOCITY_THRESHOLD, 1.0f));
 
-    float targetDirection = -std::atan2(m_startPosition.y() - robotPos.y(), m_startPosition.x() - robotPos.x());
+    float targetDirection = -MathHelper::getLineAngle(robotPos, m_startPosition);
     m_pRobot->setTargetDirection(targetDirection);
 
     QVector2D ballPos = m_pMaster->getBall()->getPosition();
 
-    float targetOrientation = std::atan2(ballPos.y() - robotPos.y(), ballPos.x() - robotPos.x());
+    float targetOrientation = MathHelper::getLineAngle(robotPos, ballPos);
     m_pRobot->setTargetOrientation(targetOrientation);
 }
 

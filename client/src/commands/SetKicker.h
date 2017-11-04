@@ -17,6 +17,8 @@ public:
 
     virtual bool isFinished();
 
+    virtual void end();
+
 private:
     float m_speed;
 };

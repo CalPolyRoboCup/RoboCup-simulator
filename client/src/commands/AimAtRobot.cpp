@@ -19,7 +19,7 @@ void AimAtRobot::update(double deltaTime)
     QVector2D robotPos = m_pRobot->getPosition();
     QVector2D ballPos = m_pMaster->getBall()->getPosition();
 
-    float targetOrientation = std::atan2(ballPos.y() - robotPos.y(), ballPos.x() - robotPos.x());
+    float targetOrientation = MathHelper::getLineAngle(robotPos, ballPos);
     m_pRobot->setTargetOrientation(targetOrientation);
 
     QVector2D targetRobotPos = m_pTargetRobot->getPosition();
@@ -32,7 +32,7 @@ void AimAtRobot::update(double deltaTime)
     if ((robotPos - currentTargetPos).length() > AIM_ORBIT_RADIUS)
         currentTargetPos = ballPos - (ballPos - MathHelper::getClosestPoint(robotPos, currentTargetPos, ballPos)).normalized() * AIM_ORBIT_RADIUS;
 
-    float targetDirection = -std::atan2(currentTargetPos.y() - robotPos.y(), currentTargetPos.x() - robotPos.x());
+    float targetDirection = -MathHelper::getLineAngle(robotPos, currentTargetPos);
     m_pRobot->setTargetDirection(targetDirection);
 }
 

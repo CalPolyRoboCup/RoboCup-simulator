@@ -15,3 +15,8 @@ bool SetKicker::isFinished()
 {
     return true;
 }
+
+void SetKicker::end()
+{
+    destroy();
+}

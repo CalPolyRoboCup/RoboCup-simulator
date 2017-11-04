@@ -14,6 +14,8 @@ public:
 
     virtual bool isFinished();
 
+    virtual void end();
+
 private:
     double m_delayTime;
     double m_secondsPassed;

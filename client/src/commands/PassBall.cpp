@@ -1,4 +1,5 @@
 #include "PassBall.h"
+#include "../MathHelper.h"
 #include <cmath>
 #include <iostream>
 
@@ -15,14 +16,14 @@ void PassBall::update(double deltaTime)
     QVector2D robotPos = m_pRobot->getPosition();
     QVector2D targetRobotPos = m_pTargetRobot->getPosition();
 
-    m_targetOrientation = std::atan2(targetRobotPos.y() - robotPos.y(), targetRobotPos.x() - robotPos.x());
+    m_targetOrientation = MathHelper::getLineAngle(robotPos, targetRobotPos);
     m_pRobot->setTargetOrientation(m_targetOrientation);
 
     QVector2D ballPos = m_pMaster->getBall()->getPosition();
 
     m_pRobot->setTargetSpeed(std::min(std::max((float)((robotPos - ballPos).length() - PASS_TARGET_DISTANCE) * PASS_VELOCITY_THRESHOLD, 0.0f), 1.0f));
 
-    m_targetDirection = -std::atan2(ballPos.y() - robotPos.y(), ballPos.x() - robotPos.x());
+    m_targetDirection = -MathHelper::getLineAngle(robotPos, ballPos);
 
     m_pRobot->setTargetDirection(m_targetDirection);
 }

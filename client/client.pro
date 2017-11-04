@@ -25,7 +25,9 @@ SOURCES += \
     src/commands/SetKicker.cpp \
     src/commands/Delay.cpp \
     src/commands/CatchBall.cpp \
-    src/commands/GetOpen.cpp
+    src/commands/GetOpen.cpp \
+    src/commands/QuickPass.cpp \
+    src/commands/OneTimerPass.cpp
 
 HEADERS += \
     src/robocup_ssl_client.h \
@@ -54,7 +56,9 @@ HEADERS += \
     src/commands/SetKicker.h \
     src/commands/Delay.h \
     src/commands/CatchBall.h \
-    src/commands/GetOpen.h
+    src/commands/GetOpen.h \
+    src/commands/QuickPass.h \
+    src/commands/OneTimerPass.h
 
 QT += network
 
