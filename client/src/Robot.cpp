@@ -90,7 +90,7 @@ void Robot::updateCommand(double deltaTime)
         }
     }
 
-    if (m_pCommand == 0 && m_pDefaultCommand != 0)
+    if (m_pCommand == 0 && m_pWaitingCommand == 0 && m_pDefaultCommand != 0)
     {
         m_pCommand = m_pDefaultCommand;
         m_pCommand->start();
