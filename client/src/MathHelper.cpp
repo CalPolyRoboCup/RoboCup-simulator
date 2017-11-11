@@ -16,4 +16,20 @@ namespace MathHelper
     {
         return std::atan2(pointB.y() - pointA.y(), pointB.x() - pointA.x());
     }
+
+    float adjustAngleValue(float baseAngle, float otherAngle)
+    {
+        while (baseAngle - otherAngle > M_PI)
+            otherAngle += M_PI * 2;
+
+        while (otherAngle - baseAngle > M_PI)
+            otherAngle -= M_PI * 2;
+
+        return otherAngle;
+    }
+
+    float biasAngle(float incoming, float outgoing, float outgoingBias)
+    {
+        return (incoming + outgoing * outgoingBias) / (1 + outgoingBias);
+    }
 }

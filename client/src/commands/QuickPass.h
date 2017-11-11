@@ -26,8 +26,6 @@ private:
 
     QVector2D m_startPosition;
     QVector2D m_ballDirectionVector;
-
-    float biasAngle(float incoming, float outgoing, float outgoingBias);
 };
 
 #endif // QUICKPASS_H

@@ -26,14 +26,9 @@ void QuickPass::update(double deltaTime)
     QVector2D pointOfContact = MathHelper::getClosestPoint(ballPos, ballPos + m_ballDirectionVector, m_startPosition);
 
     float robotAngle = MathHelper::getLineAngle(pointOfContact, m_pTargetRobot->getPosition());
+    ballDirection = MathHelper::adjustAngleValue(robotAngle, ballDirection);
 
-    while (robotAngle < 0)
-        robotAngle += M_PI * 2;
-
-    while (robotAngle - ballDirection > M_PI)
-        ballDirection += M_PI * 2;
-
-    float targetAngle = biasAngle(ballDirection, robotAngle, QUICKPASS_ANGLE_BIAS / m_pMaster->getBall()->getSpeed());
+    float targetAngle = MathHelper::biasAngle(ballDirection, robotAngle, QUICKPASS_ANGLE_BIAS / m_pMaster->getBall()->getSpeed());
     m_pRobot->setTargetOrientation(targetAngle);
 
     QVector2D targetPos = pointOfContact - QVector2D(std::cos(targetAngle), std::sin(targetAngle)) * 90.0f;
@@ -55,9 +50,4 @@ bool QuickPass::isFinished()
 void QuickPass::end()
 {
     m_pRobot->setKickerSpeed(4);
-}
-
-float QuickPass::biasAngle(float incoming, float outgoing, float outgoingBias)
-{
-    return (incoming + outgoing * outgoingBias) / (1 + outgoingBias);
 }

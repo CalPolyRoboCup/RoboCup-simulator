@@ -21,6 +21,23 @@ namespace MathHelper
      * @return A float representing the radians of the line drawn from point A to point B
      */
     float getLineAngle(QVector2D pointA, QVector2D pointB);
+
+    /**
+     * @brief Returns the angle in radians that results in the lowest difference between the two given angles
+     * @param baseAngle The angle used to adjust the other angle
+     * @param otherAngle The angle to be adjusted
+     * @return The value of the adjusted angle
+     */
+    float adjustAngleValue(float baseAngle, float otherAngle);
+
+    /**
+     * @brief Returns the angle that represents a bisection of the two given angles, but biased toward the outgoing angle from the given bias
+     * @param incoming The incoming angle
+     * @param outgoing The outgoing angle (the bias controls how influential this is)
+     * @param outoingBias The outgoing angle bias constant
+     * @return The baised angle
+     */
+    float biasAngle(float incoming, float outgoing, float outgoingBias);
 }
 
 #endif // MATHHELPER_H

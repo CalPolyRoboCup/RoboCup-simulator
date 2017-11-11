@@ -1,4 +1,5 @@
 #include "Robot.h"
+#include "MathHelper.h"
 #include <cmath>
 #include <iostream>
 
@@ -96,12 +97,7 @@ void Robot::updateCommand(double deltaTime)
         m_pCommand->start();
     }
 
-    float orientationSetpoint = m_orientationPid->getSetpoint();
-
-    if (std::abs(m_orientation - orientationSetpoint) > std::abs((m_orientation + 2 * M_PI) - orientationSetpoint))
-        m_targetAngularVelocity = m_orientationPid->calculate(deltaTime, m_orientation + 2 * M_PI);
-    else
-        m_targetAngularVelocity = m_orientationPid->calculate(deltaTime, m_orientation);
+    m_targetAngularVelocity = m_orientationPid->calculate(deltaTime, MathHelper::adjustAngleValue(m_orientationPid->getSetpoint(), m_orientation));
 }
 
 void Robot::writeOutput(grSim_Robot_Command *pCommand)
