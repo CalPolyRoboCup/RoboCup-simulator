@@ -1,1 +1,3 @@
 build/
+LogViewer/__pycache__/
+*.log.gz
