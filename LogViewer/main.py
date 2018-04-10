@@ -12,7 +12,7 @@ def start() -> None:
         ld = LogData()
         ld.parse(file)
 
-    viewer = Viewer(ld, "RoboCup SSL Log Viewer", (1040, 740), (0, 0, 0))
+    viewer = Viewer(ld, "RoboCup SSL Log Viewer", 1040, 740, (0, 95, 0))
     viewer.run()
 
 
