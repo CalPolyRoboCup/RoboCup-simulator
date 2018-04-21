@@ -26,4 +26,4 @@ class Geometry(GeometryBase):
 
 
 # Allow creation of a Geometry instance without parameters
-Geometry.__new__.__defaults__ = (10, 9000, 6000, 300, 1000, 300, 10, 500, 1000)  # (0,) * len(Geometry._fields)
+Geometry.__new__.__defaults__ = (10, 9000, 6000, 300, 1000, 300, 10, 500, 1000)

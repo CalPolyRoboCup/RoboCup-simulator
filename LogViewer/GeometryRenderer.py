@@ -43,10 +43,12 @@ class GeometryRenderer(Actor):
         pygame.draw.rect(self.viewer.screen, self.LINE_COLOR, goal_rect, thickness)
         pygame.draw.line(self.viewer.screen, self.LINE_COLOR,
                          (field_rect.x, self.viewer.window_height // 2),
-                         (field_rect.x + field_rect.width, self.viewer.window_height // 2))
+                         (field_rect.x + field_rect.width, self.viewer.window_height // 2),
+                         thickness)
         pygame.draw.line(self.viewer.screen, self.LINE_COLOR,
                          (self.viewer.window_width // 2, field_rect.y),
-                         (self.viewer.window_width // 2, field_rect.y + field_rect.height))
+                         (self.viewer.window_width // 2, field_rect.y + field_rect.height),
+                         thickness)
         pygame.draw.circle(self.viewer.screen, self.LINE_COLOR,
                            (self.viewer.window_width // 2, self.viewer.window_height // 2),
                            geometry.center_circle_radius, thickness)

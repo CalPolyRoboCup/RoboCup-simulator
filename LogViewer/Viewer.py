@@ -2,10 +2,11 @@ from LogData import *
 from GeometryRenderer import *
 from RobotContainer import *
 from BallContainer import *
+from GUI import *
 
 
 class Viewer:
-    START_OFFSET_SECONDS = 0  # 300  # For testing
+    START_OFFSET_SECONDS = 0  # 4500  # For testing
     SCALE_RATE = 1.05
     MIN_SCALE = 0.01
     MAX_SCALE = 1.0
@@ -25,7 +26,7 @@ class Viewer:
         self.scale = 0.1
         self.background = background
         self._geometry = None
-        self.actors = [GeometryRenderer(self), BallContainer(self), RobotContainer(self)]
+        self.actors = [GeometryRenderer(self), BallContainer(self), RobotContainer(self), GUI(self)]
 
         # Initialize pygame for rendering
         pygame.init()
@@ -67,6 +68,9 @@ class Viewer:
         time_delta_ms = ticks - self.last_time
         self.current_time_ns += time_delta_ms * 1000000
         self.last_time = ticks
+
+        if self.packet_id >= self.log_data.num_packets:
+            return
 
         # Read all the packets leading up to the current time
         while True:
@@ -113,3 +117,9 @@ class Viewer:
         :return: The scaled value
         """
         return int(value * self.scale)
+
+    def set_packet(self, id):
+        self.packet_id = id
+
+        if self.packet_id < self.log_data.num_packets:
+            self.current_time_ns = self.log_data.packets[self.packet_id].time_ns

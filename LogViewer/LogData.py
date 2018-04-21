@@ -14,6 +14,7 @@ class LogData:
         Creates a new LogData instance
         """
         self.packets = []
+        self.num_packets = 0
 
     def parse(self, file: gzip.GzipFile) -> None:
         """
@@ -61,6 +62,7 @@ class LogData:
             geometry = ssl_packet.geometry
 
             self.packets.append(ssl_packet)
+            self.num_packets += 1
 
 
 class SSLPacket:
