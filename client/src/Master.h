@@ -9,7 +9,7 @@
 #include "Team.h"
 #include "robocup_ssl_client.h"
 
-#define TEAM_SIZE 6
+#define TEAM_SIZE 8
 #define FIXED_DELTA_TIME 1.0f/60.0f
 
 class Robot;
@@ -28,6 +28,11 @@ public:
      * @param parent The parent QWidget to the Master instance
      */
     explicit Master(qint16 port, const std::string netAddress, Team team, QWidget* parent = 0);
+
+    /**
+     * @brief Frees any dynamically allocated memory by the Master class
+     */
+    virtual ~Master();
 
     /**
      * @brief Returns the yellow bot of the given ID

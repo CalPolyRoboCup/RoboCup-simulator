@@ -68,12 +68,6 @@ protected:
     Robot* m_pRobot;
 
     /**
-     * @brief The virtual destructor
-     * @note The destructor is protected to prevent allocation of Commands on the stack
-     */
-    virtual ~Command() { }
-
-    /**
      * @brief Called when the Command is first assigned to a robot
      */
     virtual void init() { }

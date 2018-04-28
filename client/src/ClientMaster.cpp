@@ -19,6 +19,11 @@ ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team,
     getTeamBot(0)->runCommmand(new PassToRobot(this, getTeamBot(1)));
 }
 
+ClientMaster::~ClientMaster()
+{
+    delete m_pUdpSocket;
+}
+
 void ClientMaster::writeOutput()
 {
     // Creates the packet and initializes the metadata

@@ -14,6 +14,7 @@ Robot::Robot(Team team, unsigned char id) :
     m_angularVelocity(0),
     m_targetSpeed(0),
     m_targetDirection(0),
+    m_targetOrientation(0),
     m_targetAngularVelocity(0),
     m_kickerSpeed(0),
     m_team(team),
@@ -24,6 +25,20 @@ Robot::Robot(Team team, unsigned char id) :
     m_pDefaultCommand = 0;
     m_pWaitingCommand = 0;
     m_pCommand = 0;
+}
+
+Robot::~Robot()
+{
+    delete m_orientationPid;
+
+    if (m_pDefaultCommand)
+        delete m_pDefaultCommand;
+
+    if (m_pWaitingCommand && m_pWaitingCommand != m_pDefaultCommand)
+        delete m_pWaitingCommand;
+
+    if (m_pCommand && m_pCommand != m_pDefaultCommand)
+        delete m_pCommand;
 }
 
 void Robot::refresh(SSL_DetectionRobot& robot)

@@ -23,6 +23,10 @@ public:
      */
     Robot(Team team, unsigned char id);
 
+    /**
+     * @brief Destroys any dynamically allocated memory by the Robot
+     */
+    ~Robot();
     // Transformational getters
 
     /**

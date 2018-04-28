@@ -39,7 +39,7 @@ void CatchBall::end()
     // vvv This is just for testing
     m_pRobot->setTargetSpeed(0.0f);
 
-    int nextIndex = (m_pRobot->getId() + 1) % 6;
+    int nextIndex = (m_pRobot->getId() + 1) % TEAM_SIZE;
     m_pRobot->runCommmand(new PassToRobot(m_pMaster, m_pMaster->getTeamBot(nextIndex)));
     // ^^^
 

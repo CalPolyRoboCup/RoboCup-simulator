@@ -19,6 +19,11 @@ public:
      */
     ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent = 0);
 
+    /**
+     * @brief Destroys any dynamically allocated memory by the ClientMaster
+     */
+    ~ClientMaster();
+
 protected:
 
     /**

@@ -53,6 +53,23 @@ Master::Master(qint16 port, const std::string netAddress, Team team, QWidget* pa
     m_pTimer->start(0);
 }
 
+Master::~Master()
+{
+    delete m_ball;
+
+    for (int i = 0; i < TEAM_SIZE; i++)
+    {
+        delete m_yellowBots[i];
+        delete m_blueBots[i];
+    }
+
+    delete m_pClient;
+    delete m_pFieldPixmap;
+    delete m_pYellowBot;
+    delete m_pBlueBot;
+    delete m_pTimer;
+}
+
 void Master::run()
 {
     SSL_WrapperPacket wrapperPacket;

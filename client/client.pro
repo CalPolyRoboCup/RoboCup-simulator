@@ -27,7 +27,8 @@ SOURCES += \
     src/commands/CatchBall.cpp \
     src/commands/GetOpen.cpp \
     src/commands/QuickPass.cpp \
-    src/commands/OneTimerPass.cpp
+    src/commands/OneTimerPass.cpp \
+    src/RobotManager.cpp
 
 HEADERS += \
     src/robocup_ssl_client.h \
@@ -58,7 +59,8 @@ HEADERS += \
     src/commands/CatchBall.h \
     src/commands/GetOpen.h \
     src/commands/QuickPass.h \
-    src/commands/OneTimerPass.h
+    src/commands/OneTimerPass.h \
+    src/RobotManager.h
 
 QT += network
 
