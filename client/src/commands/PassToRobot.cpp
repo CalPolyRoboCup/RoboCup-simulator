@@ -20,6 +20,6 @@ PassToRobot::PassToRobot(Master* pMaster, Robot* pTargetRobot) :
 
 void PassToRobot::end()
 {
-    m_pTargetRobot->runCommmand(new /*OneTimerPass(m_pMaster, m_pMaster->getTeamBot((m_pTargetRobot->getId() + 1) % 6))*/CatchBall(m_pMaster));
+    m_pTargetRobot->runCommmand(new OneTimerPass(m_pMaster, m_pMaster->getTeamBot((m_pTargetRobot->getId() + 1) % m_pMaster->getNumTeamBots()))/*CatchBall(m_pMaster)*/);
     destroy();
 }

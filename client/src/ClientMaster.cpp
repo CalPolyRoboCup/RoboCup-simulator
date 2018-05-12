@@ -8,15 +8,19 @@
 #include "commands/AimAtRobot.h"
 #include "commands/GetOpen.h"
 
+#define READ_ONLY
+
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
     Master(port, netAddress, team, parent)
 {
     m_pUdpSocket = new QUdpSocket();
 
-    for (int i = 0; i < TEAM_SIZE; i++)
+#ifndef READ_ONLY
+    for (int i = 0; i < getNumTeamBots(); i++)
         getTeamBot(i)->setDefaultCommand(new GetOpen(this));
 
     getTeamBot(0)->runCommmand(new PassToRobot(this, getTeamBot(1)));
+#endif
 }
 
 ClientMaster::~ClientMaster()
@@ -31,7 +35,7 @@ void ClientMaster::writeOutput()
     simPacket.mutable_commands()->set_isteamyellow(getTeam() == YELLOW);
     simPacket.mutable_commands()->set_timestamp(0.0);
 
-    for (int i = 0; i < TEAM_SIZE; i++)
+    for (int i = 0; i < getNumTeamBots(); i++)
         getTeamBot(i)->writeOutput(simPacket.mutable_commands()->add_robot_commands());
 
     // Serialize the packet and send it to grSim

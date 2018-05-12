@@ -4,15 +4,16 @@
 #include <QWidget>
 #include <QTimer>
 #include <QPixmap>
+#include "Team.h"
+#include "RobotManager.h"
 #include "Robot.h"
 #include "Ball.h"
-#include "Team.h"
 #include "robocup_ssl_client.h"
 
-#define TEAM_SIZE 8
 #define FIXED_DELTA_TIME 1.0f/60.0f
 
 class Robot;
+class RobotManager;
 
 /**
  * @brief The Master class is an abstract class that handles receiving packets from the SSL server and updating robot information
@@ -39,28 +40,28 @@ public:
      * @param id The ID of the yellow robot to access
      * @return The yellow robot of the given ID
      */
-    Robot* getYellowBot(int id) const { return m_yellowBots[id]; }
+    Robot* getYellowBot(int id);
 
     /**
      * @brief Returns the blue bot of the given ID
      * @param id The ID of the blue robot to access
      * @return The blue robot of the given ID
      */
-    Robot* getBlueBot(int id) const { return m_blueBots[id]; }
+    Robot* getBlueBot(int id);
 
     /**
      * @brief Returns the bot on the controlling team of the given ID
      * @param id The ID of the robot to access
      * @return The robot of the given ID
      */
-    Robot* getTeamBot(int id) const { return m_teamBots[id]; }
+    Robot* getTeamBot(int id);
 
     /**
      * @brief Returns the bot on the opposing team of the given ID
      * @param id The ID of the robot to access
      * @return The robot of the given ID
      */
-    Robot* getOpponentBot(int id) const { return m_opponentBots[id]; }
+    Robot* getOpponentBot(int id);
 
     /**
      * @brief Returns the Ball instance
@@ -73,6 +74,37 @@ public:
      * @return The Team that master is controlling
      */
     Team getTeam() const { return m_team; }
+
+    /**
+     * @brief Returns the number of yellow bots in the game
+     * @return The number of yellow bots in the game
+     */
+    int getNumYellowBots() const;
+
+    /**
+     * @brief Returns the number of blue bots in the game
+     * @return The number of blue bots in the game
+     */
+    int getNumBlueBots() const;
+
+    /**
+     * @brief Returns the number of team bots in the game
+     * @return The number of team bots in the game
+     */
+    int getNumTeamBots() const;
+
+    /**
+     * @brief Returns the number of opponent bots in the game
+     * @return The number of opponent bots in the game
+     */
+    int getNumOpponentBots() const;
+
+    /**
+     * @brief Converts world coordinates to a point on the screen
+     * @param point The point to convert
+     * @return The converted point
+     */
+    QPoint convertToScreenPoint(QVector2D point);
 
 protected:
 
@@ -88,14 +120,14 @@ private:
 
     int m_framesUntilStart;
 
-    Robot* m_yellowBots[TEAM_SIZE];
-    Robot* m_blueBots[TEAM_SIZE];
+    RobotManager* m_yellowBots;
+    RobotManager* m_blueBots;
 
     Ball* m_ball;
 
     Team m_team;
-    Robot** m_teamBots;
-    Robot** m_opponentBots;
+    RobotManager* m_teamBots;
+    RobotManager* m_opponentBots;
 
     QPixmap* m_pFieldPixmap;
     QPixmap* m_pYellowBot;
@@ -108,8 +140,6 @@ private:
     void update(double deltaTime);
 
     void paintEvent(QPaintEvent* e);
-
-    QPoint convertToScreenPoint(QVector2D point);
 
 public slots:
 

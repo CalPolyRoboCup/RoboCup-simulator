@@ -16,12 +16,16 @@ Master::Master(qint16 port, const std::string netAddress, Team team, QWidget* pa
     setWindowTitle("Cal Poly RoboCup SSL Engine");
     setFixedSize(m_WIDTH, m_HEIGHT);
 
-    // Initailize each team of robots
-    for (unsigned char i = 0; i < TEAM_SIZE; i++)
-    {
-        m_yellowBots[i] = new Robot(YELLOW, i);
-        m_blueBots[i] = new Robot(BLUE, i);
-    }
+    m_pFieldPixmap = new QPixmap();
+    m_pYellowBot = new QPixmap();
+    m_pBlueBot = new QPixmap();
+
+    m_pFieldPixmap->load(":/images/Field.png");
+    m_pYellowBot->load(":/images/YellowBot.png");
+    m_pBlueBot->load(":/images/BlueBot.png");
+
+    m_yellowBots = new RobotManager(YELLOW, m_pYellowBot);
+    m_blueBots = new RobotManager(BLUE, m_pBlueBot);
 
     if (m_team == YELLOW)
     {
@@ -36,15 +40,7 @@ Master::Master(qint16 port, const std::string netAddress, Team team, QWidget* pa
 
     m_ball = new Ball;
 
-    m_pFieldPixmap = new QPixmap();
-    m_pYellowBot = new QPixmap();
-    m_pBlueBot = new QPixmap();
-
-    m_pFieldPixmap->load(":/images/Field.png");
-    m_pYellowBot->load(":/images/YellowBot.png");
-    m_pBlueBot->load(":/images/BlueBot.png");
-
-    // Open the SSL client
+    // Open the SSL client 
     m_pClient = new RoboCupSSLClient(port, netAddress, "");
     m_pClient->open();
 
@@ -53,16 +49,51 @@ Master::Master(qint16 port, const std::string netAddress, Team team, QWidget* pa
     m_pTimer->start(0);
 }
 
+Robot* Master::getYellowBot(int id)
+{
+    return m_yellowBots->get(id);
+}
+
+Robot* Master::getBlueBot(int id)
+{
+    return m_blueBots->get(id);
+}
+
+Robot* Master::getTeamBot(int id)
+{
+    return m_teamBots->get(id);
+}
+
+Robot* Master::getOpponentBot(int id)
+{
+    return m_opponentBots->get(id);
+}
+
+int Master::getNumYellowBots() const
+{
+    return m_yellowBots->getNumRobots();
+}
+
+int Master::getNumBlueBots() const
+{
+    return m_blueBots->getNumRobots();
+}
+
+int Master::getNumTeamBots() const
+{
+    return m_teamBots->getNumRobots();
+}
+
+int Master::getNumOpponentBots() const
+{
+    return m_opponentBots->getNumRobots();
+}
+
 Master::~Master()
 {
+    delete m_yellowBots;
+    delete m_blueBots;
     delete m_ball;
-
-    for (int i = 0; i < TEAM_SIZE; i++)
-    {
-        delete m_yellowBots[i];
-        delete m_blueBots[i];
-    }
-
     delete m_pClient;
     delete m_pFieldPixmap;
     delete m_pYellowBot;
@@ -99,7 +130,7 @@ void Master::run()
         for (int i = 0; i < yellowSize; i++)
         {
             SSL_DetectionRobot robot = frame.robots_yellow(i);
-            m_yellowBots[robot.robot_id()]->refresh(robot);
+            m_yellowBots->get(robot.robot_id())->refresh(robot);
         }
 
         // Update each blue robot
@@ -108,7 +139,7 @@ void Master::run()
         for (int i = 0; i < blueSize; i++)
         {
             SSL_DetectionRobot robot = frame.robots_blue(i);
-            m_blueBots[robot.robot_id()]->refresh(robot);
+            m_blueBots->get(robot.robot_id())->refresh(robot);
         }
 
         if (frame.balls_size() > 0)
@@ -121,14 +152,9 @@ void Master::run()
 
 void Master::update(double deltaTime)
 {
-    // Update each robot on the controlling team
-    for (int i = 0; i < TEAM_SIZE; i++)
-        m_teamBots[i]->updateStats(deltaTime);
-
+    m_teamBots->updateStats(deltaTime);
     m_ball->updateStats(deltaTime);
-
-    for (int i = 0; i < TEAM_SIZE; i++)
-        m_teamBots[i]->updateCommand(deltaTime);
+    m_teamBots->updateCommand(deltaTime);
 
     writeOutput();
     repaint();
@@ -147,35 +173,41 @@ void Master::paintEvent(QPaintEvent* e)
     QPoint ballPosition = convertToScreenPoint(m_ball->getPosition());
     painter.drawEllipse(ballPosition, 2, 2);
 
-    for (int i = 0; i < TEAM_SIZE; i++)
-    {
-        QPoint robotPoint = convertToScreenPoint(m_yellowBots[i]->getPosition());
+    m_yellowBots->paint(this, painter);
+    m_blueBots->paint(this, painter);
 
-        painter.translate(robotPoint.x(), robotPoint.y());
-        painter.rotate(-m_yellowBots[i]->getOrientation() * (180.0 / M_PI));
+    m_yellowBots->paintIDs(this, painter);
+    m_blueBots->paintIDs(this, painter);
+    // TODO: Finish the painting code.
+//    for (int i = 0; i < TEAM_SIZE; i++)
+//    {
+//        QPoint robotPoint = convertToScreenPoint(m_yellowBots->get(i)->getPosition());
 
-        painter.drawPixmap(-9, -9, 18, 18, *m_pYellowBot);
+//        painter.translate(robotPoint.x(), robotPoint.y());
+//        painter.rotate(-m_yellowBots->get(i)->getOrientation() * (180.0 / M_PI));
 
-        painter.resetTransform();
+//        painter.drawPixmap(-9, -9, 18, 18, *m_pYellowBot);
 
-        robotPoint = convertToScreenPoint(m_blueBots[i]->getPosition());
+//        painter.resetTransform();
 
-        painter.translate(robotPoint.x(), robotPoint.y());
-        painter.rotate(-m_blueBots[i]->getOrientation() * (180.0 / M_PI));
+//        robotPoint = convertToScreenPoint(m_blueBots->get(i)->getPosition());
 
-        painter.drawPixmap(-9, -9, 18, 18, *m_pBlueBot);
+//        painter.translate(robotPoint.x(), robotPoint.y());
+//        painter.rotate(-m_blueBots->get(i)->getOrientation() * (180.0 / M_PI));
 
-        painter.resetTransform();
-    }
+//        painter.drawPixmap(-9, -9, 18, 18, *m_pBlueBot);
 
-    for (int i = 0; i < TEAM_SIZE; i++)
-    {
-        QPoint robotPoint = convertToScreenPoint(m_yellowBots[i]->getPosition());
-        painter.drawText(robotPoint.x() + 9, robotPoint.y() - 9, QString::number(i));
+//        painter.resetTransform();
+//    }
 
-        robotPoint = convertToScreenPoint(m_blueBots[i]->getPosition());
-        painter.drawText(robotPoint.x() + 9, robotPoint.y() - 9, QString::number(i));
-    }
+//    for (int i = 0; i < TEAM_SIZE; i++)
+//    {
+//        QPoint robotPoint = convertToScreenPoint(m_yellowBots->get(i)->getPosition());
+//        painter.drawText(robotPoint.x() + 9, robotPoint.y() - 9, QString::number(i));
+
+//        robotPoint = convertToScreenPoint(m_blueBots->get(i)->getPosition());
+//        painter.drawText(robotPoint.x() + 9, robotPoint.y() - 9, QString::number(i));
+//    }
 }
 
 QPoint Master::convertToScreenPoint(QVector2D pos)

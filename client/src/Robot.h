@@ -110,8 +110,7 @@ public:
     void refresh(SSL_DetectionRobot& robot);
 
     /**
-     * @brief Updates the robot's motor outputs and writes them to the given @see grSim_Robot_Command
-     * @param pCommand The command to which the function will write the outputs
+     * @brief Updates the robot's velocity information
      * @param deltaTime The time passed since the last update call
      */
     void updateStats(double deltaTime);

@@ -14,6 +14,6 @@ OneTimerPass::OneTimerPass(Master* pMaster, Robot* pTargetRobot)
 
 void OneTimerPass::end()
 {
-    m_pTargetRobot->runCommmand(new OneTimerPass(m_pMaster, m_pMaster->getTeamBot((m_pTargetRobot->getId() + 1) % 6)));
+    m_pTargetRobot->runCommmand(new OneTimerPass(m_pMaster, m_pMaster->getTeamBot((m_pTargetRobot->getId() + 1) % m_pMaster->getNumTeamBots())));
     destroy();
 }
