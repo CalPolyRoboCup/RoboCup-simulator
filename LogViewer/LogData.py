@@ -1,5 +1,6 @@
 import gzip
 import messages_robocup_ssl_wrapper_legacy_pb2
+import referee_pb2
 
 from struct import *
 from Geometry import *
@@ -15,6 +16,10 @@ class LogData:
         """
         self.packets = []
         self.num_packets = 0
+
+        self.skipping = True
+        self.skip_start = 0
+        self.skip_time_total = 0
 
     def parse(self, file: gzip.GzipFile) -> None:
         """
@@ -34,11 +39,11 @@ class LogData:
         while True:
             # Read the time stamp of the packet
             ts = file.read(8)
-
+            
             # If the time stamp is empty, we're done parsing the file, so exit the loop
             if not ts:
+                print("done parsing")
                 break
-
             # Convert the time stamp tp an integer
             ns, = unpack('>Q', ts)
 
@@ -49,20 +54,31 @@ class LogData:
             ms, = unpack('>I', file.read(4))
             mc = file.read(ms)
 
-            if mt != 2:
-                continue
-
             # Construct a new SSLPacket
-            ssl_packet = SSLPacket(ns, mt, geometry)
+            ssl_packet = SSLPacket(ns - self.skip_time_total, mt, geometry)
 
             # Generate the SSLPacket's wrapper packet based on the message type
             if not ssl_packet.gen_wrapper_packet(mc):
                 continue
 
             geometry = ssl_packet.geometry
-
-            self.packets.append(ssl_packet)
-            self.num_packets += 1
+  
+            #start skipping for HALT command
+            if (mt == 3 and not self.skipping and ssl_packet.wrapper_packet.command == 0):
+              self.skipping = True
+              self.skip_start = ns
+              print("skip")
+            
+            #stop skipping at any other value
+            if (mt == 3 and self.skipping and ssl_packet.wrapper_packet.command != 0):
+              self.skipping = False
+              self.skip_time_total += ns - self.skip_start
+              print("to", ts)
+            
+            #if good data point push it to packets
+            if (not self.skipping and mt == 2):
+              self.packets.append(ssl_packet)
+              self.num_packets += 1
 
 
 class SSLPacket:
@@ -84,19 +100,20 @@ class SSLPacket:
         """
         if self.message_type == 2:
             self.wrapper_packet = messages_robocup_ssl_wrapper_legacy_pb2.SSL_WrapperPacket()
+            # Generate geometry data for vision data only
+            # Moved so this isn't run for referee data
+            if self.wrapper_packet.geometry is not None:
+                self.geometry = Geometry._make([
+                    getattr(self.wrapper_packet.geometry.field, v) or getattr(self.geometry, v) for
+                    v in list(self.wrapper_packet.geometry.field.DESCRIPTOR.fields_by_name) if
+                    v in self.geometry._fields])
         elif self.message_type == 3:
-            # TODO: Implement refbox messages
-            return False
+            #read referee data 
+            #no geometry data for referee
+            self.wrapper_packet = referee_pb2.SSL_Referee()
         else:
             return False
 
         self.wrapper_packet.ParseFromString(message)
-
-        # Generate geometry data
-        if self.wrapper_packet.geometry is not None:
-            self.geometry = Geometry._make([
-                getattr(self.wrapper_packet.geometry.field, v) or getattr(self.geometry, v) for
-                v in list(self.wrapper_packet.geometry.field.DESCRIPTOR.fields_by_name) if
-                v in self.geometry._fields])
 
         return True
