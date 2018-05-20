@@ -42,7 +42,7 @@ class LogData:
             
             # If the time stamp is empty, we're done parsing the file, so exit the loop
             if not ts:
-                print("done parsing")
+                #print("done parsing")
                 break
             # Convert the time stamp tp an integer
             ns, = unpack('>Q', ts)
@@ -67,13 +67,13 @@ class LogData:
             if (mt == 3 and not self.skipping and ssl_packet.wrapper_packet.command == 0):
               self.skipping = True
               self.skip_start = ns
-              print("skip")
+              #print("skip")
             
             #stop skipping at any other value
             if (mt == 3 and self.skipping and ssl_packet.wrapper_packet.command != 0):
               self.skipping = False
               self.skip_time_total += ns - self.skip_start
-              print("to", ts)
+              #print("to", ts)
             
             #if good data point push it to packets
             if (not self.skipping and mt == 2):
