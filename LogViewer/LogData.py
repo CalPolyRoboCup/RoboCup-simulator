@@ -21,7 +21,7 @@ class LogData:
         self.skip_start = 0
         self.skip_time_total = 0
 
-    def parse(self, file: gzip.GzipFile) -> None:
+    def parse(self, file: gzip.GzipFile, skip_starts = [0,1,4,5,6,7,12,13,14,15]) -> None:
         """
         Generates packets from the given gzipped log file
         :param file: The gzip file to parse
@@ -64,13 +64,13 @@ class LogData:
             geometry = ssl_packet.geometry
   
             #start skipping for HALT command
-            if (mt == 3 and not self.skipping and ssl_packet.wrapper_packet.command == 0):
+            if (mt == 3 and not self.skipping and ssl_packet.wrapper_packet.command in skip_starts):
               self.skipping = True
               self.skip_start = ns
               #print("skip")
             
             #stop skipping at any other value
-            if (mt == 3 and self.skipping and ssl_packet.wrapper_packet.command != 0):
+            if (mt == 3 and self.skipping and (not ssl_packet.wrapper_packet.command in skip_starts)):
               self.skipping = False
               self.skip_time_total += ns - self.skip_start
               #print("to", ts)
