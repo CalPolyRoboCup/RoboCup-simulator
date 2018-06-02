@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0392e3a8-b546-46d3-970a-b23ca72bb1ad" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../LogAssistant/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../LogAssistant/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../client/src/Master.cpp" afterPath="$PROJECT_DIR$/../client/src/Master.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../client/src/Master.h" afterPath="$PROJECT_DIR$/../client/src/Master.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../client/src/Robot.h" afterPath="$PROJECT_DIR$/../client/src/Robot.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../client/src/RobotManager.cpp" afterPath="$PROJECT_DIR$/../client/src/RobotManager.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../client/src/RobotManager.h" afterPath="$PROJECT_DIR$/../client/src/RobotManager.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../client/src/commands/OneTimerPass.cpp" afterPath="$PROJECT_DIR$/../client/src/commands/OneTimerPass.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../client/src/commands/PassToRobot.cpp" afterPath="$PROJECT_DIR$/../client/src/commands/PassToRobot.cpp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,8 +17,8 @@
       <file leaf-file-name="LogData.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/LogData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="34" column="37" lean-forward="true" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+            <state relative-caret-position="18">
+              <caret line="34" column="37" lean-forward="false" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -172,11 +166,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="4">
+  <component name="ProjectFrameBounds">
     <option name="x" value="984" />
     <option name="y" value="24" />
     <option name="width" value="936" />
-    <option name="height" value="1056" />
+    <option name="height" value="1020" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -217,8 +211,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -284,7 +278,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="984" y="24" width="936" height="1056" extended-state="4" />
+    <frame x="984" y="24" width="936" height="1020" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20192307" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -665,8 +659,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/LogData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="34" column="37" lean-forward="true" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+        <state relative-caret-position="18">
+          <caret line="34" column="37" lean-forward="false" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
