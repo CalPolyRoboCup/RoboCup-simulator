@@ -8,7 +8,7 @@
 #include "commands/AimAtRobot.h"
 #include "commands/GetOpen.h"
 
-#define READ_ONLY
+//#define READ_ONLY
 
 ClientMaster::ClientMaster(qint16 port, const std::string netAddress, Team team, QWidget* parent) :
     Master(port, netAddress, team, parent)

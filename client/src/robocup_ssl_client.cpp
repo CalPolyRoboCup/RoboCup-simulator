@@ -57,7 +57,7 @@ void RoboCupSSLClient::close()
 bool RoboCupSSLClient::open()
 {
     close();
-    if(!_socket->bind(_port, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)) {
+    if(!_socket->bind(QHostAddress::AnyIPv4, _port, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)) {
         cerr << "Unable to bind UDP socket on port " << _port << ". "
              << _socket->errorString().toStdString() << '.' << endl;
         return false;

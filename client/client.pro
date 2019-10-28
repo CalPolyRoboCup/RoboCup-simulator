@@ -63,6 +63,7 @@ HEADERS += \
     src/RobotManager.h
 
 QT += network
+QT += widgets
 
 unix:!macx: LIBS += -lprotobuf
 
